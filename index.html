@@ -149,6 +149,9 @@ th{color:var(--suave);font-size:.75rem;text-transform:uppercase;letter-spacing:.
 td:last-child,th:last-child{text-align:right;white-space:nowrap}
 tr.total td{font-weight:800}
 .real td{font-weight:800;color:var(--marino)}
+.resultado{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:14px;padding:14px 18px;background:linear-gradient(135deg,#e3f4e9,#f1faf4);border:1px solid #b7e4c7;border-radius:14px;font-weight:800;color:var(--marino)}
+.resultado small{display:block;font-weight:600;color:var(--suave);font-size:.78rem}
+.resultado b{font:800 1.7rem var(--display);font-style:italic;color:var(--ok);white-space:nowrap}
 .leyenda{font-size:.82rem;color:var(--suave);margin-top:12px}
 .leyenda b{color:var(--marino)}
 .compromiso{font-size:.84rem;color:var(--suave);margin-top:12px}
@@ -585,7 +588,7 @@ footer a{color:#ffd7bf}
     <!-- Cuentas -->
     <section class="card" aria-label="Cuentas del evento">
       <details>
-        <summary><span>Cuentas claras · recaudación estimada <span class="neta">800 €</span></span></summary>
+        <summary><span>Cuentas claras · donación estimada <span class="neta">800 €</span></span></summary>
         <div class="tablas">
           <table>
             <thead><tr><th>Gastos</th><th>€</th></tr></thead>
@@ -610,6 +613,7 @@ footer a{color:#ffd7bf}
             </tbody>
           </table>
         </div>
+        <div class="resultado"><span>Donación estimada a la Asociación de Diabetes Valladolid <small>(ingresos 1.730 − gastos 930)</small></span><b>800 €</b></div>
         <p class="leyenda"><b>En negrita</b>: importes ya confirmados. El resto son estimaciones.</p>
         <p class="compromiso">Publicaremos el resultado final y la memoria de la actividad, y entregaremos la recaudación a la Asociación de Diabetes Valladolid.</p>
       </details>
