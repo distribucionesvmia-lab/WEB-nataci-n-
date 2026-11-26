@@ -148,6 +148,9 @@ th,td{text-align:left;padding:6px 8px;border-bottom:1px solid var(--linea)}
 th{color:var(--suave);font-size:.75rem;text-transform:uppercase;letter-spacing:.06em}
 td:last-child,th:last-child{text-align:right;white-space:nowrap}
 tr.total td{font-weight:800}
+.real td{font-weight:800;color:var(--marino)}
+.leyenda{font-size:.82rem;color:var(--suave);margin-top:12px}
+.leyenda b{color:var(--marino)}
 .compromiso{font-size:.84rem;color:var(--suave);margin-top:12px}
 
 footer{text-align:center;font-size:.88rem;color:var(--suave);padding:6px 0 34px}
@@ -599,14 +602,15 @@ footer a{color:#ffd7bf}
             <tbody>
               <tr><td>Inscripciones (100 × 10 €)</td><td>1.000</td></tr>
               <tr><td>Colaboradores</td><td>500</td></tr>
-              <tr><td>Churrería Los Jardines de Versalles</td><td>50</td></tr>
-              <tr><td>Garaje Maito</td><td>50</td></tr>
-              <tr><td>Bar Los Cazadores</td><td>30</td></tr>
+              <tr class="real"><td>Churrería Los Jardines de Versalles</td><td>50</td></tr>
+              <tr class="real"><td>Garaje Maito</td><td>50</td></tr>
+              <tr class="real"><td>Bar Los Cazadores</td><td>30</td></tr>
               <tr><td>Donaciones particulares</td><td>100</td></tr>
               <tr class="total"><td>Total</td><td>1.730</td></tr>
             </tbody>
           </table>
         </div>
+        <p class="leyenda"><b>En negrita</b>: importes ya confirmados. El resto son estimaciones.</p>
         <p class="compromiso">Publicaremos el resultado final y la memoria de la actividad, y entregaremos la recaudación a la Asociación de Diabetes Valladolid.</p>
       </details>
     </section>
