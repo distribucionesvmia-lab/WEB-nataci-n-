@@ -578,6 +578,14 @@ dialog#dlg2::backdrop{background:rgba(8,38,70,.45);-webkit-backdrop-filter:blur(
 .pn{font-weight:600;font-size:.86rem;color:var(--marino);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .buscan-card .btn{width:100%;min-height:46px;font-size:.95rem}
 .bc-nota{margin-top:10px;font-size:.78rem;color:var(--suave);text-align:center}
+
+/* Color de cada equipo */
+.equipo{--tc:var(--azul);border-left:5px solid var(--tc);background:linear-gradient(90deg,color-mix(in srgb,var(--tc) 7%,#fff),#fff 55%)}
+.equipo h3{color:var(--tc)}
+.equipo li{background:color-mix(in srgb,var(--tc) 11%,#fff);border-color:color-mix(in srgb,var(--tc) 28%,#fff);color:var(--texto);font-weight:600}
+.equipo .unir:not(.soy){background:var(--tc);border-color:var(--tc)}
+@media (hover:hover){.equipo .unir:not(.soy):hover{background:var(--tc);filter:brightness(.9)}}
+.equipo h3::before{content:"";display:inline-block;width:.62em;height:.62em;border-radius:50%;background:var(--tc);margin-right:.45em;vertical-align:.05em;box-shadow:0 0 0 3px color-mix(in srgb,var(--tc) 22%,#fff)}
 </style>
 </head>
 <body>
@@ -850,6 +858,10 @@ function equipos(){
 
 function el(tag,cls,txt){ const e=document.createElement(tag); if(cls) e.className=cls; if(txt!=null) e.textContent=txt; return e; }
 
+/* Cada equipo tiene su color, fijo según su número: se ve igual para todo el mundo */
+const COLORES = ["#1a6fc0","#d6336c","#2f9e44","#7048e8","#0c8599","#e03131","#f08c00","#364fc7","#66a80f","#ae3ec9","#1098ad","#9c6644","#087f5b","#a61e4d","#495057","#5c940d"];
+const colorEquipo = id => COLORES[((Number(id)||1)-1) % COLORES.length];
+
 function pintar(){
   const eq = equipos(), total = inscritos.length;
   $("total").textContent = total;
@@ -859,6 +871,7 @@ function pintar(){
   if(!total) lista.appendChild(el("p","vacio","Aún no hay nadie. ¡Sé la primera persona en apuntarte!"));
   eq.forEach(e=>{
     const n = e.miembros.length, c = el("div","equipo"), h = el("header");
+    c.style.setProperty("--tc", colorEquipo(e.id));
     const t = el("h3",null,"Equipo "+(e.nombre||e.id));
     let st;
     if(n>=CONFIG.MAX_EQUIPO) st = el("span","estado lleno","Completo");
