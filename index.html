@@ -620,6 +620,14 @@ dialog#dlg2::backdrop{background:rgba(8,38,70,.45);-webkit-backdrop-filter:blur(
 /* La lista de inscritos crece con su contenido en móvil; en ordenador tiene su propio scroll */
 .equipos{max-height:none;overflow:visible;padding-right:0}
 @media (min-width:900px){.equipos{max-height:calc(100vh - 220px);overflow:auto;padding-right:4px}}
+
+/* Que se vea todo completo: sin scrolls internos */
+.tabla-wrap{max-height:none;overflow:visible}
+.tabla-busca thead th{position:static}
+.tabla-busca thead th:first-child{border-top-left-radius:11px}
+.tabla-busca thead th:last-child{border-top-right-radius:11px}
+.equipos{max-height:none!important;overflow:visible!important;padding-right:0!important}
+@media (min-width:900px){#equipos{position:static}}
 </style>
 </head>
 <body>
