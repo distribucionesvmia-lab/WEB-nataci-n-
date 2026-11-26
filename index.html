@@ -108,7 +108,7 @@ form .btn{width:100%}
 .equipos{display:grid;gap:8px;max-height:420px;overflow:auto;padding-right:2px}
 .equipo{border:1px solid var(--linea);border-radius:12px;padding:10px 12px}
 .equipo header{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:6px}
-.equipo h3{font-size:1rem;color:var(--marino)}
+.equipo h3{font-size:1.05rem;color:var(--marino);font-style:italic;text-transform:uppercase;letter-spacing:.3px}
 .equipo h3 span{font-family:var(--body);font-weight:600;color:var(--suave);font-size:.88rem}
 .estado{font-size:.72rem;font-weight:800;border-radius:99px;padding:2px 9px;white-space:nowrap}
 .estado.falta{background:#fff0e5;color:#a6460f}
@@ -526,8 +526,8 @@ footer a{color:#ffd7bf}
           <label for="equipo">Equipo
             <select id="equipo"></select>
           </label>
-          <label for="equipoNombre" id="lbl-nuevo" hidden><span>Nombre del equipo nuevo <small>(opcional)</small></span>
-            <input id="equipoNombre" type="text" maxlength="40">
+          <label for="equipoNombre" id="lbl-nuevo" hidden><span>Nombre del equipo <small>(así saldrá en la lista: EQUIPO …)</small></span>
+            <input id="equipoNombre" type="text" maxlength="30" placeholder="Ej.: Delfines">
           </label>
           <label class="check" for="rgpd">
             <input id="rgpd" type="checkbox" required>
@@ -638,8 +638,7 @@ function pintar(){
   if(!total) lista.appendChild(el("p","vacio","Aún no hay nadie. ¡Sé la primera persona en apuntarte!"));
   eq.forEach(e=>{
     const n = e.miembros.length, c = el("div","equipo"), h = el("header");
-    const t = el("h3",null,"Equipo "+e.id+" ");
-    if(e.nombre) t.appendChild(el("span",null,e.nombre));
+    const t = el("h3",null,"Equipo "+(e.nombre||e.id));
     let st;
     if(n>=CONFIG.MAX_EQUIPO) st = el("span","estado lleno","Completo");
     else if(n>=CONFIG.MIN_EQUIPO) st = el("span","estado listo",n+"/"+CONFIG.MAX_EQUIPO);
@@ -662,12 +661,12 @@ function pintar(){
   op("nuevo","Crear un equipo nuevo");
   eq.forEach(e=>{
     const lleno = e.miembros.length>=CONFIG.MAX_EQUIPO;
-    op(String(e.id),"Equipo "+e.id+(e.nombre?" · "+e.nombre:"")+" ("+e.miembros.length+"/"+CONFIG.MAX_EQUIPO+")"+(lleno?" · completo":""),lleno);
+    op(String(e.id),"Equipo "+(e.nombre||e.id)+" ("+e.miembros.length+"/"+CONFIG.MAX_EQUIPO+")"+(lleno?" · completo":""),lleno);
   });
   if([...sel.options].some(o=>o.value===previo && !o.disabled)) sel.value = previo;
   cambio();
 }
-function cambio(){ $("lbl-nuevo").hidden = $("equipo").value!=="nuevo"; }
+function cambio(){ const nuevo = $("equipo").value==="nuevo"; $("lbl-nuevo").hidden = !nuevo; $("equipoNombre").required = nuevo; }
 $("equipo").addEventListener("change",cambio);
 
 function mostrar(t,tipo){ const m=$("msg"); m.textContent=t; m.className="msg "+tipo; m.hidden=false; }
@@ -682,7 +681,12 @@ $("form").addEventListener("submit", async ev=>{
 
   const eq = equipos(), v = $("equipo").value;
   let equipo = null, equipoNombre = "";
-  if(v==="nuevo"){ equipo = (eq.length?Math.max(...eq.map(e=>e.id)):0)+1; equipoNombre = $("equipoNombre").value.trim(); }
+  if(v==="nuevo"){
+    equipoNombre = $("equipoNombre").value.trim().replace(/^equipo\s+/i,"");
+    if(!equipoNombre){ $("equipoNombre").focus(); return mostrar("Ponle un nombre a tu equipo para crearlo.","err"); }
+    if(eq.some(e=>e.nombre && e.nombre.toLowerCase()===equipoNombre.toLowerCase())) return mostrar("Ya existe un equipo con ese nombre. Elígelo en la lista o usa otro nombre.","err");
+    equipo = (eq.length?Math.max(...eq.map(e=>e.id)):0)+1;
+  }
   else if(v!=="solo"){
     equipo = Number(v);
     const e = eq.find(x=>x.id===equipo);

@@ -53,8 +53,19 @@ function doPost(e) {
     }
 
     const equipo = d.equipo ? Number(d.equipo) : '';
+    const equipoNombre = String(d.equipoNombre || '').trim().slice(0, 30);
     if (equipo) {
-      const enEquipo = filas.filter(f => Number(f[5]) === equipo).length;
+      const delEquipo = filas.filter(f => Number(f[5]) === equipo);
+      if (!delEquipo.length) {
+        // Equipo nuevo: el nombre es obligatorio y no puede repetirse.
+        if (!equipoNombre) {
+          return json_({ ok: false, error: 'Ponle un nombre a tu equipo para crearlo.' });
+        }
+        if (filas.some(f => String(f[6]).trim().toLowerCase() === equipoNombre.toLowerCase())) {
+          return json_({ ok: false, error: 'Ya existe un equipo con ese nombre. Elige otro.' });
+        }
+      }
+      const enEquipo = delEquipo.length;
       if (enEquipo >= MAX_EQUIPO) {
         return json_({ ok: false, error: 'Ese equipo ya está completo. Elige otro.' });
       }
@@ -64,7 +75,7 @@ function doPost(e) {
       new Date(), nombre, apellidos, email,
       String(d.club || '').slice(0, 80),
       equipo,
-      String(d.equipoNombre || '').slice(0, 40),
+      equipoNombre,
       'Pendiente de pago'
     ]);
     return json_({ ok: true });
