@@ -116,6 +116,16 @@ form .btn{width:100%}
 .estado.lleno{background:var(--marino);color:#fff}
 .equipo ul{margin:0;padding:0;list-style:none;display:flex;flex-wrap:wrap;gap:5px}
 .equipo li{background:var(--fondo);border-radius:99px;padding:2px 10px;font-size:.86rem}
+fieldset.modo{border:0;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:8px}
+.modo legend{font-weight:700;font-size:.9rem;padding:0;margin-bottom:8px}
+label.op{display:block;position:relative}
+.op input{position:absolute;opacity:0;inset:0;width:100%;height:100%;margin:0;cursor:pointer}
+.op span{display:inline-flex;align-items:center;min-height:44px;padding:8px 16px;border:1.5px solid #a9c1d7;border-radius:99px;font-weight:800;font-size:.9rem;color:var(--marino);background:#fff;transition:background-color .3s var(--ease),color .3s,border-color .3s,transform .3s var(--ease)}
+.op input:checked+span{background:var(--azul);border-color:var(--azul);color:#fff;transform:scale(1.03)}
+.op input:focus-visible+span{outline:3px solid var(--llama);outline-offset:2px}
+.op input:disabled+span{opacity:.45;cursor:not-allowed;background:var(--fondo)}
+@media (hover:hover){.op input:not(:checked):not(:disabled):hover+span{border-color:var(--azul);transform:translateY(-1px)}}
+#lbl-unir:not([hidden]){animation:sube .45s var(--ease)}
 .eq-pie{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-top:8px}
 .eq-pie a,.eq-pie .unir{font:800 .8rem var(--body);border-radius:99px;padding:6px 12px;text-decoration:none;border:1.5px solid var(--linea);background:#fff;color:var(--marino);cursor:pointer;min-height:34px;display:inline-flex;align-items:center;transition:background-color .25s,color .25s,border-color .25s,transform .3s var(--ease)}
 .eq-pie a.wa{background:#e3f7ea;border-color:#b7e4c7;color:#17683a}
@@ -530,7 +540,14 @@ footer a{color:#ffd7bf}
           <label for="club"><span>Club <small>(opcional)</small></span>
             <input id="club" type="text" maxlength="80">
           </label>
-          <label for="equipo">Equipo
+          <fieldset class="modo">
+            <legend>¿Cómo quieres apuntarte?</legend>
+            <label class="op"><input type="radio" name="modo" value="solo" checked><span>Busco equipo</span></label>
+            <label class="op" id="op-unir"><input type="radio" name="modo" value="unir"><span>Unirme a un equipo</span></label>
+            <label class="op"><input type="radio" name="modo" value="nuevo"><span>Crear mi equipo</span></label>
+          </fieldset>
+          <p class="nota" id="nota-modo">Te asignamos a un equipo antes de la jornada.</p>
+          <label for="equipo" id="lbl-unir" hidden>Elige el equipo
             <select id="equipo"></select>
           </label>
           <label for="equipoNombre" id="lbl-nuevo" hidden><span>Nombre del equipo <small>(así saldrá en la lista: EQUIPO …)</small></span>
@@ -667,7 +684,7 @@ function pintar(){
     }
     if(n<CONFIG.MAX_EQUIPO){
       const u = el("button","unir","Unirme"); u.type = "button";
-      u.addEventListener("click",()=>{ $("equipo").value = String(e.id); cambio(); $("inscripcion").scrollIntoView({behavior:"smooth"}); setTimeout(()=>$("nombre").focus({preventScroll:true}),600); });
+      u.addEventListener("click",()=>{ document.querySelector('input[name=modo][value=unir]').checked = true; $("equipo").value = String(e.id); cambio(); $("inscripcion").scrollIntoView({behavior:"smooth"}); setTimeout(()=>$("nombre").focus({preventScroll:true}),600); });
       pie.appendChild(u);
     }
     c.appendChild(pie); lista.appendChild(c);
@@ -684,17 +701,27 @@ function pintar(){
 
   const sel = $("equipo"), previo = sel.value; sel.textContent = "";
   const op = (v,t,dis)=>{ const o=el("option",null,t); o.value=v; o.disabled=!!dis; sel.appendChild(o); };
-  op("solo","Busco equipo (me asignáis uno)");
-  op("nuevo","Crear un equipo nuevo");
   eq.forEach(e=>{
     const lleno = e.miembros.length>=CONFIG.MAX_EQUIPO;
     op(String(e.id),"Equipo "+(e.nombre||e.id)+" ("+e.miembros.length+"/"+CONFIG.MAX_EQUIPO+")"+(lleno?" · completo":""),lleno);
   });
   if([...sel.options].some(o=>o.value===previo && !o.disabled)) sel.value = previo;
+  else { const libre = [...sel.options].find(o=>!o.disabled); if(libre) sel.value = libre.value; }
+  const hay = [...sel.options].some(o=>!o.disabled);
+  document.querySelector('#op-unir input').disabled = !hay;
+  $("op-unir").title = hay ? "" : "Todavía no hay equipos con plazas libres";
+  if(!hay && modo()==="unir") document.querySelector('input[name=modo][value=solo]').checked = true;
   cambio();
 }
-function cambio(){ const nuevo = $("equipo").value==="nuevo"; $("lbl-nuevo").hidden = !nuevo; $("lbl-tel").hidden = !nuevo; $("equipoNombre").required = nuevo; $("telefono").required = nuevo; }
-$("equipo").addEventListener("change",cambio);
+const modo = () => document.querySelector('input[name=modo]:checked').value;
+const NOTAS = {solo:"Te asignamos a un equipo antes de la jornada.", unir:"Te apuntas al equipo que elijas; verás su teléfono en la lista.", nuevo:"Tú creas el equipo y dejas un teléfono para que otros se apunten."};
+function cambio(){
+  const m = modo(), nuevo = m==="nuevo";
+  $("lbl-unir").hidden = m!=="unir"; $("equipo").required = m==="unir";
+  $("lbl-nuevo").hidden = !nuevo; $("lbl-tel").hidden = !nuevo; $("equipoNombre").required = nuevo; $("telefono").required = nuevo;
+  $("nota-modo").textContent = NOTAS[m];
+}
+document.querySelectorAll('input[name=modo]').forEach(r=>r.addEventListener("change",cambio));
 
 function mostrar(t,tipo){ const m=$("msg"); m.textContent=t; m.className="msg "+tipo; m.hidden=false; }
 
@@ -706,7 +733,7 @@ $("form").addEventListener("submit", async ev=>{
   if(!$("rgpd").checked) return mostrar("Marca la casilla de aceptación para continuar.","err");
   if(inscritos.length>=CONFIG.PLAZAS) return mostrar("Las 100 plazas están completas. Escríbenos y te avisamos si queda alguna libre.","err");
 
-  const eq = equipos(), v = $("equipo").value;
+  const eq = equipos(), v = modo()==="unir" ? $("equipo").value : modo();
   let equipo = null, equipoNombre = "", telefono = "";
   if(v==="nuevo"){
     equipoNombre = $("equipoNombre").value.trim().replace(/^equipo\s+/i,"");
