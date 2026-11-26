@@ -32,11 +32,52 @@ function doGet() {
   return json_(lista);
 }
 
+// Comprueba un equipo. Devuelve el texto del error o '' si todo está bien.
+function validarEquipo_(filas, equipo, equipoNombre, telefono) {
+  const delEquipo = filas.filter(f => Number(f[5]) === equipo);
+  if (!delEquipo.length) {
+    // Equipo nuevo: el nombre y el teléfono son obligatorios y el nombre no puede repetirse.
+    if (!equipoNombre) return 'Ponle un nombre a tu equipo para crearlo.';
+    if (filas.some(f => String(f[6]).trim().toLowerCase() === equipoNombre.toLowerCase())) {
+      return 'Ya existe un equipo con ese nombre. Elige otro.';
+    }
+    if (!/^\+?\d{9,15}$/.test(telefono)) return 'Pon un teléfono de contacto válido para el equipo.';
+  }
+  if (delEquipo.length >= MAX_EQUIPO) return 'Ese equipo ya está completo. Elige otro.';
+  return '';
+}
+
+// Alguien que se apuntó sin equipo se une a uno (o crea el suyo) desde la lista.
+// Se identifica con el email con el que se inscribió.
+function cambiarEquipo_(d) {
+  const email = String(d.email || '').trim().toLowerCase();
+  const equipo = Number(d.equipo) || 0;
+  const equipoNombre = String(d.equipoNombre || '').trim().slice(0, 30);
+  const telefono = String(d.telefono || '').replace(/[\s.\-()]/g, '').slice(0, 16);
+  if (!email || !equipo) return { ok: false, error: 'Faltan datos.' };
+
+  const hoja = hoja_();
+  const datos = hoja.getDataRange().getValues();
+  const i = datos.findIndex((f, n) => n > 0 && String(f[3]).trim().toLowerCase() === email);
+  if (i < 1) return { ok: false, error: 'No encontramos ninguna inscripción con ese email.' };
+  if (datos[i][5]) return { ok: false, error: 'Ya estás en un equipo.' };
+
+  const otras = datos.slice(1).filter((f, n) => f[1] && n + 1 !== i);
+  const error = validarEquipo_(otras, equipo, equipoNombre, telefono);
+  if (error) return { ok: false, error: error };
+
+  const nuevo = !otras.some(f => Number(f[5]) === equipo);
+  hoja.getRange(i + 1, 6, 1, 2).setValues([[equipo, nuevo ? equipoNombre : '']]);
+  if (nuevo) hoja.getRange(i + 1, 9).setValue("'" + telefono);
+  return { ok: true, nombre: String(datos[i][1]).split(' ')[0] };
+}
+
 function doPost(e) {
   const lock = LockService.getScriptLock();
   lock.waitLock(10000);
   try {
     const d = JSON.parse(e.postData.contents);
+    if (d.accion === 'cambiarEquipo') return json_(cambiarEquipo_(d));
     const nombre = String(d.nombre || '').trim().slice(0, 60);
     const apellidos = String(d.apellidos || '').trim().slice(0, 100);
     const email = String(d.email || '').trim().toLowerCase().slice(0, 120);
@@ -58,23 +99,8 @@ function doPost(e) {
     const equipoNombre = String(d.equipoNombre || '').trim().slice(0, 30);
     const telefono = String(d.telefono || '').replace(/[\s.\-()]/g, '').slice(0, 16);
     if (equipo) {
-      const delEquipo = filas.filter(f => Number(f[5]) === equipo);
-      if (!delEquipo.length) {
-        // Equipo nuevo: el nombre es obligatorio y no puede repetirse.
-        if (!equipoNombre) {
-          return json_({ ok: false, error: 'Ponle un nombre a tu equipo para crearlo.' });
-        }
-        if (filas.some(f => String(f[6]).trim().toLowerCase() === equipoNombre.toLowerCase())) {
-          return json_({ ok: false, error: 'Ya existe un equipo con ese nombre. Elige otro.' });
-        }
-        if (!/^\+?\d{9,15}$/.test(telefono)) {
-          return json_({ ok: false, error: 'Pon un teléfono de contacto válido para el equipo.' });
-        }
-      }
-      const enEquipo = delEquipo.length;
-      if (enEquipo >= MAX_EQUIPO) {
-        return json_({ ok: false, error: 'Ese equipo ya está completo. Elige otro.' });
-      }
+      const error = validarEquipo_(filas, equipo, equipoNombre, telefono);
+      if (error) return json_({ ok: false, error: error });
     }
 
     hoja.appendRow([

@@ -133,6 +133,16 @@ label.op{display:block;position:relative}
 .eq-pie .unir{margin-left:auto;background:var(--llama);border-color:var(--llama);color:#fff}
 @media (hover:hover){.eq-pie a:hover{border-color:var(--azul);transform:translateY(-1px)}.eq-pie .unir:hover{background:#d35512}}
 .equipo.buscan{border-left-color:var(--llama);background:#fffaf5}
+.eq-pie .soy{margin-left:0}
+dialog#dlg{border:0;padding:0;border-radius:22px;width:min(460px,calc(100vw - 28px));max-height:calc(100dvh - 28px);overflow:auto;box-shadow:0 30px 80px rgba(8,38,70,.35);color:var(--texto)}
+dialog#dlg[open]{animation:dlgIn .45s var(--ease)}
+dialog#dlg::backdrop{background:rgba(8,38,70,.45);-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px)}
+@keyframes dlgIn{from{opacity:0;transform:translateY(16px) scale(.97)}to{opacity:1;transform:none}}
+#f-cambio{padding:26px 22px 22px;position:relative}
+#f-cambio .titulo{margin-bottom:6px;padding-right:36px}
+#f-cambio .btn{width:100%}
+.cerrar{position:absolute;top:14px;right:14px;width:36px;height:36px;border-radius:50%;border:1px solid var(--borde);background:#fff;font-size:1.4rem;line-height:1;color:var(--suave);cursor:pointer}
+.cerrar:hover{color:var(--marino);border-color:var(--azul)}
 .equipo .nota{margin-top:8px}
 .vacio{color:var(--suave);font-style:italic;font-size:.92rem}
 
@@ -707,6 +717,35 @@ td{padding:8px}
     </section>
   </main>
 
+  <dialog id="dlg" aria-labelledby="dlg-t">
+    <form id="f-cambio" novalidate>
+      <button type="button" class="cerrar" id="dlg-x" aria-label="Cerrar">×</button>
+      <h2 class="titulo deporte" id="dlg-t">Únete a un equipo</h2>
+      <label for="c-quien">¿Quién eres?
+        <select id="c-quien"></select>
+      </label>
+      <label for="c-email"><span>Tu email <small>(el que usaste al inscribirte, para confirmar que eres tú)</small></span>
+        <input id="c-email" type="email" autocomplete="email" inputmode="email" required maxlength="120">
+      </label>
+      <fieldset class="modo">
+        <legend>¿Qué quieres hacer?</legend>
+        <label class="op" id="c-op-unir"><input type="radio" name="c-modo" value="unir" checked><span>Unirme a un equipo</span></label>
+        <label class="op"><input type="radio" name="c-modo" value="nuevo"><span>Crear mi equipo</span></label>
+      </fieldset>
+      <label for="c-equipo" id="c-lbl-unir">Elige el equipo
+        <select id="c-equipo"></select>
+      </label>
+      <label for="c-nombre" id="c-lbl-nuevo" hidden><span>Nombre del equipo <small>(así saldrá: EQUIPO …)</small></span>
+        <input id="c-nombre" type="text" maxlength="30" placeholder="Ej.: Delfines">
+      </label>
+      <label for="c-tel" id="c-lbl-tel" hidden><span>Teléfono de contacto del equipo <small>(se mostrará en la lista)</small></span>
+        <input id="c-tel" type="tel" autocomplete="tel" inputmode="tel" maxlength="20" placeholder="Ej.: 600 123 456">
+      </label>
+      <div id="c-msg" class="msg" role="status" hidden></div>
+      <button class="btn" type="submit" id="c-enviar">Unirme</button>
+    </form>
+  </dialog>
+
   <footer>
     <span class="olas olas-pie" aria-hidden="true"><svg class="o2" viewBox="0 0 2880 120" preserveAspectRatio="none"><path d="M0,64 C240,112 480,16 720,64 C960,112 1200,16 1440,64 C1680,112 1920,16 2160,64 C2400,112 2640,16 2880,64 V120 H0Z"/></svg><svg class="o1" viewBox="0 0 2880 120" preserveAspectRatio="none"><path d="M0,64 C240,112 480,16 720,64 C960,112 1200,16 1440,64 C1680,112 1920,16 2160,64 C2400,112 2640,16 2880,64 V120 H0Z"/></svg></span>
     <div class="pie">
@@ -798,7 +837,10 @@ function pintar(){
     c.classList.add("buscan");
     h.append(el("h3",null,"Buscan equipo"), el("span","estado falta",String(solos.length)));
     const ul = el("ul"); solos.forEach(p=>ul.appendChild(el("li",null,String(p.nombre).split(" ")[0])));
-    c.append(h,ul,el("p","nota","Estas personas buscan equipo: pueden unirse a uno de los de arriba o las asignamos nosotros antes de la jornada."));
+    const b = el("button","unir soy","Soy yo: unirme a un equipo"); b.type = "button";
+    b.addEventListener("click",()=>abrirCambio(solos));
+    const pie = el("div","eq-pie"); pie.appendChild(b);
+    c.append(h,ul,el("p","nota","¿Estás en esta lista? Únete tú a un equipo o crea el tuyo. Si no, os asignamos nosotros antes de la jornada."),pie);
     lista.appendChild(c);
   }
 
@@ -825,6 +867,66 @@ function cambio(){
   $("nota-modo").textContent = NOTAS[m];
 }
 document.querySelectorAll('input[name=modo]').forEach(r=>r.addEventListener("change",cambio));
+
+/* ===== Unirse a un equipo desde "Buscan equipo" ===== */
+const cModo = () => document.querySelector('input[name=c-modo]:checked').value;
+function cMostrar(t,tipo){ const m=$("c-msg"); m.textContent=t; m.className="msg "+tipo; m.hidden=false; }
+function cCambio(){
+  const nuevo = cModo()==="nuevo";
+  $("c-lbl-unir").hidden = nuevo; $("c-lbl-nuevo").hidden = !nuevo; $("c-lbl-tel").hidden = !nuevo;
+  $("c-enviar").textContent = nuevo ? "Crear equipo y unirme" : "Unirme";
+}
+document.querySelectorAll('input[name=c-modo]').forEach(r=>r.addEventListener("change",cCambio));
+function abrirCambio(solos){
+  const q = $("c-quien"); q.textContent = "";
+  solos.forEach(p=>{ const o=el("option",null,String(p.nombre).split(" ")[0]); q.appendChild(o); });
+  const s = $("c-equipo"); s.textContent = "";
+  equipos().filter(e=>e.miembros.length<CONFIG.MAX_EQUIPO).forEach(e=>{
+    const o = el("option",null,"Equipo "+(e.nombre||e.id)+" ("+e.miembros.length+"/"+CONFIG.MAX_EQUIPO+")"); o.value = e.id; s.appendChild(o);
+  });
+  const hay = s.options.length>0;
+  document.querySelector('#c-op-unir input').disabled = !hay;
+  document.querySelector('input[name=c-modo][value='+(hay?"unir":"nuevo")+']').checked = true;
+  $("c-msg").hidden = true; $("c-email").value = ""; $("c-nombre").value = ""; $("c-tel").value = "";
+  cCambio();
+  const d = $("dlg"); if(d.showModal) d.showModal(); else d.setAttribute("open","");
+  setTimeout(()=>$("c-email").focus(),50);
+}
+$("dlg-x").addEventListener("click",()=>$("dlg").close());
+$("dlg").addEventListener("click",e=>{ if(e.target===$("dlg")) $("dlg").close(); });
+$("f-cambio").addEventListener("submit", async ev=>{
+  ev.preventDefault(); $("c-msg").hidden = true;
+  const email = $("c-email").value.trim(), eq = equipos();
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return cMostrar("Escribe el email con el que te inscribiste.","err");
+  let equipo, equipoNombre = "", telefono = "";
+  if(cModo()==="nuevo"){
+    equipoNombre = $("c-nombre").value.trim().replace(/^equipo\s+/i,"");
+    if(!equipoNombre) return cMostrar("Ponle un nombre a tu equipo.","err");
+    if(eq.some(e=>e.nombre && e.nombre.toLowerCase()===equipoNombre.toLowerCase())) return cMostrar("Ya existe un equipo con ese nombre.","err");
+    telefono = $("c-tel").value.replace(/[\s.\-()]/g,"");
+    if(!/^\+?\d{9,15}$/.test(telefono)) return cMostrar("Pon un teléfono de contacto válido (9 cifras).","err");
+    equipo = (eq.length?Math.max(...eq.map(e=>e.id)):0)+1;
+  } else equipo = Number($("c-equipo").value);
+  $("c-enviar").disabled = true;
+  try{
+    let nombre = $("c-quien").value;
+    if(demo){
+      const l = leerLocal(), p = l.find(x=>x.email && x.email.toLowerCase()===email.toLowerCase());
+      if(!p) throw new Error("No encontramos ninguna inscripción con ese email.");
+      if(p.equipo) throw new Error("Ya estás en un equipo.");
+      p.equipo = equipo; p.equipoNombre = equipoNombre; p.telefono = telefono; guardarLocal(l); nombre = p.nombre;
+    }else{
+      const j = await (await fetch(CONFIG.ENDPOINT,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify({accion:"cambiarEquipo",email,equipo,equipoNombre,telefono})})).json();
+      if(!j.ok) throw new Error(j.error||"No se pudo hacer el cambio.");
+      if(j.nombre) nombre = j.nombre;
+    }
+    $("dlg").close();
+    await cargar();
+    mostrar("¡Listo, "+nombre+"! Ya estás en tu equipo.","ok");
+    $("equipos").scrollIntoView({behavior:"smooth",block:"start"});
+  }catch(err){ cMostrar(err.message||"No se pudo hacer el cambio.","err"); }
+  finally{ $("c-enviar").disabled = false; }
+});
 
 function mostrar(t,tipo){ const m=$("msg"); m.textContent=t; m.className="msg "+tipo; m.hidden=false; }
 
