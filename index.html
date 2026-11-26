@@ -580,12 +580,13 @@ dialog#dlg2::backdrop{background:rgba(8,38,70,.45);-webkit-backdrop-filter:blur(
 .bc-nota{margin-top:10px;font-size:.78rem;color:var(--suave);text-align:center}
 
 /* Color de cada equipo */
-.equipo{--tc:var(--azul);border-left:5px solid var(--tc);background:linear-gradient(90deg,color-mix(in srgb,var(--tc) 7%,#fff),#fff 55%)}
+.equipo{--tc:var(--azul);border:1px solid color-mix(in srgb,var(--tc) 35%,#fff);border-left:6px solid var(--tc);background:linear-gradient(135deg,color-mix(in srgb,var(--tc) 24%,#fff),color-mix(in srgb,var(--tc) 9%,#fff));box-shadow:0 6px 18px color-mix(in srgb,var(--tc) 14%,transparent)}
 .equipo h3{color:var(--tc)}
-.equipo li{background:color-mix(in srgb,var(--tc) 11%,#fff);border-color:color-mix(in srgb,var(--tc) 28%,#fff);color:var(--texto);font-weight:600}
+.equipo li{background:#fff;border-color:color-mix(in srgb,var(--tc) 45%,#fff);color:var(--texto);font-weight:600;box-shadow:0 1px 2px color-mix(in srgb,var(--tc) 18%,transparent)}
 .equipo .unir:not(.soy){background:var(--tc);border-color:var(--tc)}
 @media (hover:hover){.equipo .unir:not(.soy):hover{background:var(--tc);filter:brightness(.9)}}
-.equipo h3::before{content:"";display:inline-block;width:.62em;height:.62em;border-radius:50%;background:var(--tc);margin-right:.45em;vertical-align:.05em;box-shadow:0 0 0 3px color-mix(in srgb,var(--tc) 22%,#fff)}
+.equipo h3::before{content:"";display:inline-block;width:.62em;height:.62em;border-radius:50%;background:var(--tc);margin-right:.45em;vertical-align:.05em;box-shadow:0 0 0 3px color-mix(in srgb,var(--tc) 30%,#fff)}
+.equipo .estado{background:#fff;border:1px solid color-mix(in srgb,var(--tc) 35%,#fff)}
 </style>
 </head>
 <body>
