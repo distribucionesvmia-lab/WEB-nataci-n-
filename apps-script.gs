@@ -5,8 +5,11 @@
 const MAX_PARTICIPANTES = 100;
 const MAX_EQUIPO = 10;
 
+// Pega aquí el ID de tu hoja: está en su dirección, entre /d/ y /edit
+const SHEET_ID = 'PEGA_AQUI_EL_ID_DE_TU_HOJA';
+
 function hoja_() {
-  return SpreadsheetApp.getActiveSpreadsheet().getSheets()[0];
+  return SpreadsheetApp.openById(SHEET_ID).getSheets()[0];
 }
 
 function json_(obj) {
