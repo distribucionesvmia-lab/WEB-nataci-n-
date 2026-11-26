@@ -3,6 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#0c3563">
+<script>document.documentElement.classList.add("js")</script>
 <title>Cien por Cien Solidarios</title>
 <meta name="description" content="Jornada de natación solidaria contra la diabetes. Domingo 20 de diciembre de 2026, 10:00 h, piscina cubierta de Medina del Campo. Inscríbete aquí.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -211,14 +213,116 @@ footer a{color:var(--azul);font-weight:700}
 .cuenta b{display:block;font:800 1.45rem/1 var(--display);font-style:italic;font-variant-numeric:tabular-nums}
 .cuenta small{display:block;font-size:.6rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;opacity:.85;margin-top:3px}
 @media (max-width:420px){.acciones{flex-direction:column;align-items:center}.cuenta{justify-content:center}}
+
+/* ===== Movimiento premium ===== */
+:root{--ease:cubic-bezier(.22,1,.36,1);--ease-in-out:cubic-bezier(.65,0,.35,1);interpolate-size:allow-keywords}
+#inscripcion{scroll-margin-top:84px}
+::selection{background:rgba(236,98,25,.22)}
+
+/* Barra de progreso de lectura */
+.progreso{position:fixed;inset:0 0 auto 0;height:3px;z-index:100;pointer-events:none}
+.progreso i{display:block;height:100%;background:linear-gradient(90deg,var(--llama),#ffb27d 50%,#3fa1ef);transform-origin:0 50%;transform:scaleX(0);will-change:transform}
+
+/* Cabecera fija tipo cristal */
+.top{position:sticky;top:0;z-index:50;margin:0 -14px;padding:10px 14px;border-radius:0 0 18px 18px;transition:background-color .5s var(--ease),box-shadow .5s var(--ease),padding .5s var(--ease)}
+.top img{transition:height .5s var(--ease)}
+.top.scrolled{background:rgba(255,255,255,.72);-webkit-backdrop-filter:blur(16px) saturate(1.6);backdrop-filter:blur(16px) saturate(1.6);box-shadow:0 1px 0 rgba(12,53,99,.06),0 10px 30px rgba(12,53,99,.10);padding-top:7px;padding-bottom:7px}
+.top.scrolled img{height:38px}
+.btn.mini{min-height:38px;padding:8px 16px;font-size:.9rem;opacity:0;transform:translateY(-8px) scale(.94);pointer-events:none;transition:opacity .45s var(--ease),transform .45s var(--ease),background-color .25s}
+.top.cta .btn.mini{opacity:1;transform:none;pointer-events:auto}
+
+/* Botones */
+.btn{position:relative;overflow:hidden;isolation:isolate;transition:transform .35s var(--ease),box-shadow .35s var(--ease),background-color .25s}
+.btn::after{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(105deg,transparent 30%,rgba(255,255,255,.38) 50%,transparent 70%);transform:translateX(-120%);transition:transform .8s var(--ease)}
+@media (hover:hover){.btn:hover{transform:translateY(-2px)}.btn:hover::after{transform:translateX(120%)}}
+.btn:active{transform:translateY(1px) scale(.98);transition-duration:.1s}
+.hero .btn{animation:brillo 5s var(--ease-in-out) 2.2s infinite}
+.hero .btn::before{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(105deg,transparent 35%,rgba(255,255,255,.35) 50%,transparent 65%);transform:translateX(-130%);animation:barrido 5s var(--ease-in-out) 2.2s infinite}
+@keyframes barrido{0%,70%{transform:translateX(-130%)}100%{transform:translateX(130%)}}
+@keyframes brillo{0%,70%,100%{box-shadow:0 4px 0 #a9420c,0 0 0 0 rgba(236,98,25,0)}82%{box-shadow:0 4px 0 #a9420c,0 0 0 10px rgba(236,98,25,.18)}}
+
+/* Entrada de la portada */
+@keyframes sube{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:none}}
+@keyframes cartelIn{from{opacity:0;transform:translateY(30px) rotate(-4deg) scale(.94)}to{opacity:1;transform:rotate(2deg)}}
+@keyframes heroIn{from{opacity:0;transform:scale(.985)}to{opacity:1;transform:none}}
+.js .hero{animation:heroIn 1s var(--ease) both}
+.js .hero>div>*{animation:sube .9s var(--ease) both}
+.js .hero>div>:nth-child(1){animation-delay:.15s}
+.js .hero>div>:nth-child(2){animation-delay:.25s}
+.js .hero>div>:nth-child(3){animation-delay:.33s}
+.js .hero>div>:nth-child(4){animation-delay:.42s}
+.js .hero>div>:nth-child(5){animation-delay:.5s}
+.js .hero>div>:nth-child(6){animation-delay:.62s}
+.js .claves div{animation:sube .8s var(--ease) both}
+.js .claves div:nth-child(1){animation-delay:.55s}.js .claves div:nth-child(2){animation-delay:.62s}
+.js .claves div:nth-child(3){animation-delay:.69s}.js .claves div:nth-child(4){animation-delay:.76s}
+.js .hero .cartel{animation:cartelIn 1.2s var(--ease) .35s both}
+.hero .cartel{will-change:translate}
+/* Brillo del agua */
+.hero::after{animation:ola 7s var(--ease-in-out) infinite alternate}
+@keyframes ola{from{transform:translateX(-6%) scaleY(.9);opacity:.7}to{transform:translateX(6%) scaleY(1.1);opacity:1}}
+
+/* Cuenta atrás: cada cifra entra al cambiar */
+.cuenta b{overflow:hidden}
+.cuenta b.tick{animation:tick .5s var(--ease)}
+@keyframes tick{from{opacity:0;transform:translateY(-45%);filter:blur(2px)}to{opacity:1;transform:none;filter:none}}
+
+/* Aparición al hacer scroll */
+.js .rv{opacity:0;transform:translateY(34px) scale(.985);transition:opacity .9s var(--ease),transform 1s var(--ease),box-shadow .4s var(--ease)}
+.js .rv.in{opacity:1;transform:none}
+.js .rv .st{opacity:0;transform:translateY(18px);transition:opacity .7s var(--ease),transform .8s var(--ease);transition-delay:calc(var(--d,0)*80ms + 180ms)}
+.js .rv.in .st{opacity:1;transform:none}
+.fotos img{transition:transform 1.4s var(--ease)}
+.js .rv .fotos img{transform:scale(1.12)}
+.js .rv.in .fotos img{transform:none}
+@media (hover:hover){
+  .card:not(.hero):hover{box-shadow:0 14px 40px rgba(12,53,99,.12)}
+  .logo{transition:transform .4s var(--ease),box-shadow .4s var(--ease),border-color .4s}
+  .logo:hover{transform:translateY(-4px);box-shadow:0 10px 24px rgba(12,53,99,.1);border-color:#b8d3ea}
+  .calle .num{transition:transform .4s var(--ease)}
+  .calle:hover .num{transform:rotate(-6deg) scale(1.08)}
+  .js .rv.in .fotos figure:hover img,.fotos figure:hover img{transform:scale(1.06)}
+}
+
+/* Barra de plazas */
+.barra i{position:relative;overflow:hidden;transition:width 1.6s var(--ease)}
+.barra i::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.55),transparent);transform:translateX(-100%);animation:corre 2.6s var(--ease-in-out) infinite}
+@keyframes corre{to{transform:translateX(100%)}}
+
+/* Lista de inscritos */
+.equipos{overscroll-behavior:contain;scrollbar-width:thin;scrollbar-color:#b8d3ea transparent;-webkit-overflow-scrolling:touch}
+.equipo{animation:pop .6s var(--ease) both}
+.equipo li{animation:pop .5s var(--ease) both}
+.equipo li:nth-child(2){animation-delay:.04s}.equipo li:nth-child(3){animation-delay:.08s}.equipo li:nth-child(4){animation-delay:.12s}
+.equipo li:nth-child(5){animation-delay:.16s}.equipo li:nth-child(n+6){animation-delay:.2s}
+@keyframes pop{from{opacity:0;transform:translateY(8px) scale(.97)}to{opacity:1;transform:none}}
+
+/* Formulario */
+input[type=text],input[type=email],select{transition:border-color .25s,box-shadow .3s var(--ease),outline-color .25s}
+input:focus,select:focus{box-shadow:0 6px 18px rgba(26,111,192,.12)}
+.msg:not([hidden]){animation:sube .5s var(--ease)}
+label[for=equipoNombre]:not([hidden]){animation:sube .45s var(--ease)}
+
+/* Cuentas desplegables con animación */
+details::details-content{height:0;overflow:clip;opacity:0;transition:height .55s var(--ease),opacity .45s var(--ease),content-visibility .55s allow-discrete}
+details[open]::details-content{height:auto;opacity:1}
+details summary::after{transition:background-color .3s,color .3s}
+@media (hover:hover){details summary:hover::after{background:var(--azul);color:#fff;border-color:var(--azul)}}
+
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;animation-delay:0s!important;animation-iteration-count:1!important;transition-duration:.01ms!important;transition-delay:0s!important}
+  .js .rv,.js .rv .st,.js .rv .fotos img{opacity:1;transform:none}
+}
 </style>
 </head>
 <body>
+<div class="progreso" aria-hidden="true"><i id="progreso"></i></div>
 <div class="wrap">
 
   <div class="top">
     <img src="img/triatlon.png" alt="Club Triatlón Bomberos Valladolid">
     <div><b>Cien por Cien Solidarios</b><small>Club Triatlón Bomberos Valladolid</small></div>
+    <a class="btn mini" id="cta-top" href="#inscripcion" tabindex="-1" aria-hidden="true">Inscribirme</a>
   </div>
 
   <main class="stack">
@@ -487,13 +591,47 @@ function cuenta(){
   if(ms<=0){ $("cuenta").hidden = true; return; }
   const p = n => String(n).padStart(2,"0");
   $("cuenta").hidden = false;
-  $("c-d").textContent = Math.floor(ms/864e5);
-  $("c-h").textContent = p(Math.floor(ms%864e5/36e5));
-  $("c-m").textContent = p(Math.floor(ms%36e5/6e4));
-  $("c-s").textContent = p(Math.floor(ms%6e4/1e3));
+  const set = (id,v)=>{ const e=$(id); v=String(v); if(e.textContent===v) return; e.textContent=v; e.classList.remove("tick"); void e.offsetWidth; e.classList.add("tick"); };
+  set("c-d", Math.floor(ms/864e5));
+  set("c-h", p(Math.floor(ms%864e5/36e5)));
+  set("c-m", p(Math.floor(ms%36e5/6e4)));
+  set("c-s", p(Math.floor(ms%6e4/1e3)));
 }
 cuenta(); setInterval(cuenta,1000);
 cargar();
+
+/* ===== Movimiento: aparición al scroll, cabecera, progreso y parallax ===== */
+(function(){
+  const quieto = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const cards = document.querySelectorAll(".stack > .card:not(.hero)");
+  cards.forEach(c=>{
+    c.classList.add("rv");
+    c.querySelectorAll(".logo, .calle, .fotos figure, .reglas li, .tablas table").forEach((x,i)=>{ x.classList.add("st"); x.style.setProperty("--d", i); });
+  });
+  if("IntersectionObserver" in window && !quieto){
+    const io = new IntersectionObserver(es=>es.forEach(e=>{ if(e.isIntersecting){ const t=e.target; t.classList.add("in"); io.unobserve(t); setTimeout(()=>t.querySelectorAll(".st").forEach(x=>x.classList.remove("st")),1800); } }),{rootMargin:"0px 0px -8% 0px",threshold:.08});
+    cards.forEach(c=>io.observe(c));
+  } else cards.forEach(c=>c.classList.add("in"));
+
+  const top = document.querySelector(".top"), hero = document.querySelector(".hero"), cta = $("cta-top");
+  const barra = $("progreso"), cartel = hero.querySelector(".cartel");
+  let pend = false;
+  function frame(){
+    pend = false;
+    const y = scrollY, max = document.documentElement.scrollHeight - innerHeight;
+    barra.style.transform = "scaleX(" + (max>0 ? Math.min(1, y/max) : 0) + ")";
+    top.classList.toggle("scrolled", y > 8);
+    const pasado = hero.getBoundingClientRect().bottom < 60;
+    top.classList.toggle("cta", pasado);
+    cta.tabIndex = pasado ? 0 : -1; cta.setAttribute("aria-hidden", String(!pasado));
+    if(!quieto && y < hero.offsetTop + hero.offsetHeight){
+      if(cartel) cartel.style.translate = "0 " + (y * -0.08).toFixed(1) + "px";
+    }
+  }
+  addEventListener("scroll", ()=>{ if(!pend){ pend = true; requestAnimationFrame(frame); } }, {passive:true});
+  addEventListener("resize", frame, {passive:true});
+  frame();
+})();
 </script>
 </body>
 </html>
