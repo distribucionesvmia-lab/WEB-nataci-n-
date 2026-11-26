@@ -630,15 +630,31 @@ dialog#dlg2::backdrop{background:rgba(8,38,70,.45);-webkit-backdrop-filter:blur(
 @media (min-width:900px){#equipos{position:static}}
 
 /* Mapa */
-.mapa{position:relative;margin-top:16px;border-radius:18px;overflow:hidden;border:1px solid var(--borde);box-shadow:0 10px 30px rgba(12,53,99,.12);background:#fff}
-.mapa iframe{display:block;width:100%;height:300px;border:0;position:relative;z-index:1;background:transparent}
-.mapa-fondo{display:grid;place-items:center;gap:6px;position:absolute;inset:0 0 72px 0;height:auto;z-index:0;color:var(--azul);background:linear-gradient(135deg,#dcecf9,#eaf3fb);font-weight:600;font-size:.85rem;text-align:center;align-content:center}
-.mapa-info{position:relative;z-index:2;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 16px;background:#fff;border-top:1px solid var(--borde)}
-.mapa-info b{display:block;font:800 1.1rem var(--display);font-style:italic;text-transform:uppercase;color:var(--marino);line-height:1.1}
-.mapa-info small{color:var(--suave);font-size:.78rem}
-.mini-btn{min-height:40px;padding:8px 18px;font-size:.85rem;white-space:nowrap}
-@media (max-width:480px){.mapa iframe{height:240px}.mapa-info{flex-direction:column;align-items:stretch;text-align:center}.mini-btn{width:100%}.mapa-fondo{inset:0 0 120px 0}}
-@media (min-width:900px){.mapa iframe{height:380px}}
+.mapa{position:relative;margin-top:18px;border-radius:22px;overflow:hidden;border:1px solid var(--borde);box-shadow:0 18px 44px rgba(12,53,99,.18),0 2px 6px rgba(12,53,99,.06);background:#dcecf9;isolation:isolate}
+.mapa::after{content:"";position:absolute;left:0;right:0;bottom:0;height:6px;z-index:4;background:var(--corchera);pointer-events:none}
+.mapa iframe{display:block;width:100%;height:340px;border:0;position:relative;z-index:1;background:transparent;filter:saturate(.92) contrast(1.02)}
+.mapa-fondo{position:absolute;inset:0;z-index:0;display:grid;place-items:center;align-content:center;gap:10px;
+  background:radial-gradient(circle at 30% 30%,rgba(255,255,255,.7),transparent 45%),repeating-linear-gradient(0deg,rgba(26,111,192,.07) 0 1px,transparent 1px 36px),repeating-linear-gradient(90deg,rgba(26,111,192,.07) 0 1px,transparent 1px 36px),linear-gradient(135deg,#d3e8f8,#e9f3fb)}
+.pin-pulso{position:relative;width:56px;height:56px;border-radius:50%;display:grid;place-items:center;background:var(--llama);color:#fff;box-shadow:0 8px 20px rgba(236,98,25,.35)}
+.pin-pulso::before{content:"";position:absolute;inset:0;border-radius:50%;background:var(--llama);opacity:.45;animation:latido 2s var(--ease-in-out) infinite}
+@keyframes latido{0%{transform:scale(1);opacity:.5}100%{transform:scale(2.2);opacity:0}}
+.cargando{font-size:.8rem;font-weight:600;letter-spacing:.06em;color:var(--azul)}
+.mapa-card{position:absolute;z-index:3;left:16px;bottom:22px;max-width:calc(100% - 32px);display:flex;align-items:center;gap:12px;padding:12px 12px 12px 14px;border-radius:18px;
+  background:rgba(255,255,255,.88);-webkit-backdrop-filter:blur(14px) saturate(1.5);backdrop-filter:blur(14px) saturate(1.5);border:1px solid rgba(255,255,255,.7);box-shadow:0 12px 32px rgba(12,53,99,.22)}
+.mc-pin{flex:none;width:42px;height:42px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(135deg,#ffb27d,var(--llama));color:#fff;box-shadow:0 4px 10px rgba(236,98,25,.35)}
+.mc-txt{min-width:0}
+.mc-txt b{display:block;font:800 1.15rem var(--display);font-style:italic;text-transform:uppercase;color:var(--marino);line-height:1.05}
+.mc-txt small{display:block;margin-top:2px;font-size:.74rem;font-weight:500;color:var(--suave)}
+.mc-btn{flex:none;gap:7px;min-height:42px;padding:9px 18px;font-size:.88rem;white-space:nowrap}
+.mc-btn svg{transition:transform .35s var(--ease)}
+@media (hover:hover){.mc-btn:hover svg{transform:translateX(4px)}.mapa:hover iframe{filter:saturate(1) contrast(1.03)}}
+@media (max-width:640px){
+  .mapa iframe{height:410px}
+  .mapa-card{left:10px;right:10px;bottom:16px;max-width:none;flex-wrap:wrap;padding:12px}
+  .mc-txt{flex:1 1 calc(100% - 60px)}
+  .mc-btn{flex:1 1 100%;width:100%}
+}
+@media (min-width:900px){.mapa iframe{height:440px}.mapa-card{left:22px;bottom:28px;padding:14px 14px 14px 16px}.mc-pin{width:48px;height:48px}.mc-txt b{font-size:1.3rem}}
 </style>
 </head>
 <body>
@@ -715,12 +731,16 @@ dialog#dlg2::backdrop{background:rgba(8,38,70,.45);-webkit-backdrop-filter:blur(
         <figure class="f2"><img src="img/piscina.jpg" alt="Vista general de la piscina cubierta municipal de Medina del Campo" loading="lazy"><figcaption>Piscina cubierta municipal</figcaption></figure>
       </div>
       <div class="mapa">
-        <div class="mapa-fondo" aria-hidden="true"><svg viewBox="0 0 24 24" width="38" height="38"><path fill="currentColor" d="M12 2a7 7 0 0 0-7 7c0 5.2 7 13 7 13s7-7.8 7-13a7 7 0 0 0-7-7Zm0 9.5A2.5 2.5 0 1 1 12 6.5a2.5 2.5 0 0 1 0 5Z"/></svg><span>Cargando mapa…</span></div>
+        <div class="mapa-fondo" aria-hidden="true">
+          <span class="pin-pulso"><svg viewBox="0 0 24 24" width="30" height="30"><path fill="currentColor" d="M12 2a7 7 0 0 0-7 7c0 5.2 7 13 7 13s7-7.8 7-13a7 7 0 0 0-7-7Zm0 9.5A2.5 2.5 0 1 1 12 6.5a2.5 2.5 0 0 1 0 5Z"/></svg></span>
+          <span class="cargando">Cargando mapa…</span>
+        </div>
         <iframe title="Mapa: Piscina cubierta municipal de Medina del Campo" loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen
           src="https://www.google.com/maps?q=Piscina+cubierta+municipal+Medina+del+Campo&amp;hl=es&amp;z=16&amp;output=embed"></iframe>
-        <div class="mapa-info">
-          <div><b>Piscina cubierta municipal</b><small>Medina del Campo · Domingo 20 dic. · 10:00 h</small></div>
-          <a class="btn mini-btn" href="https://maps.app.goo.gl/uGSsiKDLmBh2Qrsg9?g_st=ic" target="_blank" rel="noopener">Cómo llegar</a>
+        <div class="mapa-card">
+          <span class="mc-pin" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22"><path fill="currentColor" d="M12 2a7 7 0 0 0-7 7c0 5.2 7 13 7 13s7-7.8 7-13a7 7 0 0 0-7-7Zm0 9.5A2.5 2.5 0 1 1 12 6.5a2.5 2.5 0 0 1 0 5Z"/></svg></span>
+          <div class="mc-txt"><b>Piscina cubierta municipal</b><small>Medina del Campo · Dom. 20 dic. · 10:00 h</small></div>
+          <a class="btn mc-btn" href="https://maps.app.goo.gl/uGSsiKDLmBh2Qrsg9?g_st=ic" target="_blank" rel="noopener">Cómo llegar <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" d="M5 12h14M13 6l6 6-6 6"/></svg></a>
         </div>
       </div>
     </section>
