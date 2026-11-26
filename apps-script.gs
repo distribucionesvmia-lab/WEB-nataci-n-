@@ -1,6 +1,6 @@
 // Cien por Cien Solidarios: guarda las inscripciones en una hoja de Google.
 // Hoja con esta primera fila (A1:H1):
-// fecha | nombre | apellidos | email | club | equipo | equipoNombre | estado
+// fecha | nombre | apellidos | email | club | equipo | equipoNombre | estado | telefono
 
 const MAX_PARTICIPANTES = 100;
 const MAX_EQUIPO = 10;
@@ -54,6 +54,7 @@ function doPost(e) {
 
     const equipo = d.equipo ? Number(d.equipo) : '';
     const equipoNombre = String(d.equipoNombre || '').trim().slice(0, 30);
+    const telefono = String(d.telefono || '').replace(/[\s.\-()]/g, '').slice(0, 16);
     if (equipo) {
       const delEquipo = filas.filter(f => Number(f[5]) === equipo);
       if (!delEquipo.length) {
@@ -63,6 +64,9 @@ function doPost(e) {
         }
         if (filas.some(f => String(f[6]).trim().toLowerCase() === equipoNombre.toLowerCase())) {
           return json_({ ok: false, error: 'Ya existe un equipo con ese nombre. Elige otro.' });
+        }
+        if (!/^\+?\d{9,15}$/.test(telefono)) {
+          return json_({ ok: false, error: 'Pon un teléfono de contacto válido para el equipo.' });
         }
       }
       const enEquipo = delEquipo.length;
@@ -76,7 +80,8 @@ function doPost(e) {
       String(d.club || '').slice(0, 80),
       equipo,
       equipoNombre,
-      'Pendiente de pago'
+      'Pendiente de pago',
+      telefono ? "'" + telefono : ''
     ]);
     return json_({ ok: true });
   } catch (err) {
