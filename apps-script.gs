@@ -17,8 +17,7 @@ function json_(obj) {
     .setMimeType(ContentService.MimeType.JSON);
 }
 
-// Lista pública: nombre de pila, equipo y, solo de quien crea un equipo, su teléfono
-// (lo deja a propósito para que se apunten). Nunca apellidos ni email.
+// Lista pública: solo nombre de pila y equipo. Nunca apellidos, email ni teléfono.
 function doGet() {
   const filas = hoja_().getDataRange().getValues().slice(1);
   const lista = filas
@@ -26,8 +25,7 @@ function doGet() {
     .map(f => ({
       nombre: String(f[1]).split(' ')[0],
       equipo: f[5] ? Number(f[5]) : null,
-      equipoNombre: f[6] ? String(f[6]) : '',
-      telefono: f[8] ? String(f[8]).replace(/\D/g, '') : ''
+      equipoNombre: f[6] ? String(f[6]) : ''
     }));
   return json_(lista);
 }

@@ -129,7 +129,6 @@ label.op{display:block;position:relative}
 #lbl-unir:not([hidden]){animation:sube .45s var(--ease)}
 .eq-pie{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-top:8px}
 .eq-pie a,.eq-pie .unir{font:800 .8rem var(--body);border-radius:99px;padding:6px 12px;text-decoration:none;border:1.5px solid var(--linea);background:#fff;color:var(--marino);cursor:pointer;min-height:34px;display:inline-flex;align-items:center;transition:background-color .25s,color .25s,border-color .25s,transform .3s var(--ease)}
-.eq-pie a.wa{background:#e3f7ea;border-color:#b7e4c7;color:#17683a}
 .eq-pie .unir{margin-left:auto;background:var(--llama);border-color:var(--llama);color:#fff}
 @media (hover:hover){.eq-pie a:hover{border-color:var(--azul);transform:translateY(-1px)}.eq-pie .unir:hover{background:#d35512}}
 .equipo.buscan{border-left-color:var(--llama);background:#fffaf5}
@@ -662,7 +661,7 @@ td{padding:8px}
           <label for="equipoNombre" id="lbl-nuevo" hidden><span>Nombre del equipo <small>(así saldrá en la lista: EQUIPO …)</small></span>
             <input id="equipoNombre" type="text" maxlength="30" placeholder="Ej.: Delfines">
           </label>
-          <label for="telefono" id="lbl-tel" hidden><span>Teléfono de contacto del equipo <small>(se mostrará en la lista para que la gente te contacte)</small></span>
+          <label for="telefono" id="lbl-tel" hidden><span>Teléfono de contacto del equipo <small>(solo lo ve la organización, no se publica)</small></span>
             <input id="telefono" type="tel" autocomplete="tel" inputmode="tel" maxlength="20" placeholder="Ej.: 600 123 456">
           </label>
           <label class="check" for="rgpd">
@@ -738,7 +737,7 @@ td{padding:8px}
       <label for="c-nombre" id="c-lbl-nuevo" hidden><span>Nombre del equipo <small>(así saldrá: EQUIPO …)</small></span>
         <input id="c-nombre" type="text" maxlength="30" placeholder="Ej.: Delfines">
       </label>
-      <label for="c-tel" id="c-lbl-tel" hidden><span>Teléfono de contacto del equipo <small>(se mostrará en la lista)</small></span>
+      <label for="c-tel" id="c-lbl-tel" hidden><span>Teléfono de contacto del equipo <small>(solo lo ve la organización, no se publica)</small></span>
         <input id="c-tel" type="tel" autocomplete="tel" inputmode="tel" maxlength="20" placeholder="Ej.: 600 123 456">
       </label>
       <div id="c-msg" class="msg" role="status" hidden></div>
@@ -791,7 +790,6 @@ function equipos(){
     if(!m.has(p.equipo)) m.set(p.equipo,{id:Number(p.equipo),nombre:"",miembros:[]});
     const e = m.get(p.equipo);
     if(!e.nombre && p.equipoNombre) e.nombre = p.equipoNombre;
-    if(!e.telefono && p.telefono) e.telefono = String(p.telefono).replace(/\D/g,"");
     e.miembros.push(String(p.nombre).split(" ")[0]);
   });
   return [...m.values()].sort((a,b)=>a.id-b.id);
@@ -817,13 +815,6 @@ function pintar(){
     const ul = el("ul"); e.miembros.forEach(x=>ul.appendChild(el("li",null,x)));
     c.append(h,ul);
     const pie = el("div","eq-pie");
-    if(e.telefono){
-      const t = e.telefono, bonito = t.length===9 ? t.replace(/(\d{3})(\d{2})(\d{2})(\d{2})/,"$1 $2 $3 $4") : t;
-      const wa = "https://wa.me/"+(t.length===9 ? "34"+t : t);
-      const a = el("a","tel","📞 "+bonito); a.href = "tel:+"+(t.length===9?"34"+t:t); a.setAttribute("aria-label","Llamar al equipo "+(e.nombre||e.id));
-      const w = el("a","wa","WhatsApp"); w.href = wa; w.target = "_blank"; w.rel = "noopener";
-      pie.append(a,w);
-    }
     if(n<CONFIG.MAX_EQUIPO){
       const u = el("button","unir","Unirme"); u.type = "button";
       u.addEventListener("click",()=>{ document.querySelector('input[name=modo][value=unir]').checked = true; $("equipo").value = String(e.id); cambio(); $("inscripcion").scrollIntoView({behavior:"smooth"}); setTimeout(()=>$("nombre").focus({preventScroll:true}),600); });
@@ -859,7 +850,7 @@ function pintar(){
   cambio();
 }
 const modo = () => document.querySelector('input[name=modo]:checked').value;
-const NOTAS = {solo:"Te asignamos a un equipo antes de la jornada.", unir:"Te apuntas al equipo que elijas; verás su teléfono en la lista.", nuevo:"Tú creas el equipo y dejas un teléfono para que otros se apunten."};
+const NOTAS = {solo:"Te asignamos a un equipo antes de la jornada.", unir:"Te apuntas al equipo que elijas.", nuevo:"Tú creas el equipo y dejas un teléfono para que la organización pueda contactar."};
 function cambio(){
   const m = modo(), nuevo = m==="nuevo";
   $("lbl-unir").hidden = m!=="unir"; $("equipo").required = m==="unir";
