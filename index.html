@@ -68,7 +68,8 @@ p{margin:0}
 /* Apoyos */
 .apoyos h2,.titulo{font-size:1.35rem;color:var(--marino);margin-bottom:12px}
 .apoyos h2{text-align:center;font-size:1rem;color:var(--suave);font-family:var(--body);font-weight:800;letter-spacing:.08em;text-transform:uppercase}
-.logos{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.logos{display:flex;flex-wrap:wrap;justify-content:center;gap:12px}
+.logos .logo{flex:0 0 calc((100% - 24px)/3);min-width:0}
 .logo{border:1px solid var(--linea);border-radius:14px;padding:12px;display:grid;gap:6px;justify-items:center;align-content:center}
 .logo img{width:100%;height:84px;object-fit:contain}
 .logo span{font-size:.7rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--llama)}
@@ -415,6 +416,7 @@ footer a{color:#ffd7bf}
   .olas{height:120px}
 
   .logos{gap:20px}
+  .logos .logo{flex-basis:calc((100% - 80px)/5)}
   .logo{padding:20px}
   .logo img{height:100px}
 
@@ -492,6 +494,8 @@ footer a{color:#ffd7bf}
         <div class="logo"><img src="img/redexis.png" alt="Fundación Redexis"><span>Patrocinador</span></div>
         <div class="logo"><img src="img/valentin.png" alt="Distribuciones Valentín, Medina del Campo"><span>Colaborador</span></div>
         <div class="logo"><img src="img/triatlon.png" alt="Club Triatlón Bomberos Valladolid"><span>Organiza</span></div>
+        <div class="logo"><img src="img/garaje-maito.jpg" alt="Garaje Maito, venta y reparación de bicicletas, Medina del Campo" loading="lazy"><span>Colaborador</span></div>
+        <div class="logo"><img src="img/churreria-versalles.jpg" alt="Churrería Los Jardines de Versalles" loading="lazy"><span>Colaborador</span></div>
       </div>
       <p class="instituciones">Ayuntamiento de Medina del Campo · Piscina municipal · Asociación de Diabetes Valladolid · Voluntarios y familias</p>
     </section>
