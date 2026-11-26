@@ -559,6 +559,21 @@ dialog#dlg2::backdrop{background:rgba(8,38,70,.45);-webkit-backdrop-filter:blur(
 #f-gestion .titulo{margin-bottom:6px;padding-right:36px;font-size:1.5rem}
 #f-gestion .btn{width:100%}
 #f-gestion .btn.peligro{background:#b3261e}
+
+/* Buscan equipo */
+.buscan-card{margin-top:2px;padding:18px;border-radius:16px;border:1px solid #f5d9c4;background:linear-gradient(180deg,#fff8f1,#fff);box-shadow:0 1px 0 rgba(236,98,25,.08),0 10px 26px rgba(236,98,25,.07);animation:pop .6s var(--ease) both}
+.buscan-card header{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:14px}
+.bc-tit h3{font-family:var(--display);font-weight:800;font-style:italic;text-transform:uppercase;font-size:1.3rem;color:var(--marino);line-height:1}
+.bc-tit small{display:block;margin-top:3px;font-size:.74rem;font-weight:600;letter-spacing:.06em;color:var(--llama);text-transform:uppercase}
+.bc-n{min-width:42px;height:42px;padding:0 10px;display:grid;place-items:center;border-radius:99px;background:var(--llama);color:#fff;font:800 1.35rem var(--display);font-variant-numeric:tabular-nums;box-shadow:0 4px 12px rgba(236,98,25,.3)}
+.personas{list-style:none;margin:0 0 16px;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(118px,1fr));gap:8px;max-height:236px;overflow:auto;overscroll-behavior:contain;scrollbar-width:thin;scrollbar-color:#f0c9ad transparent}
+.persona{display:flex;align-items:center;gap:9px;padding:7px 12px 7px 7px;background:#fff;border:1px solid #f1e1d4;border-radius:99px;animation:pop .5s var(--ease) both;transition:border-color .3s,transform .3s var(--ease),box-shadow .3s}
+.persona:nth-child(2){animation-delay:.04s}.persona:nth-child(3){animation-delay:.08s}.persona:nth-child(4){animation-delay:.12s}.persona:nth-child(n+5){animation-delay:.16s}
+@media (hover:hover){.persona:hover{border-color:var(--llama);transform:translateY(-1px);box-shadow:0 6px 14px rgba(236,98,25,.12)}}
+.avatar{flex:none;width:30px;height:30px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(135deg,#ffb27d,var(--llama));color:#fff;font:800 .95rem var(--display)}
+.pn{font-weight:600;font-size:.86rem;color:var(--marino);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.buscan-card .btn{width:100%;min-height:46px;font-size:.95rem}
+.bc-nota{margin-top:10px;font-size:.78rem;color:var(--suave);text-align:center}
 </style>
 </head>
 <body>
@@ -859,19 +874,23 @@ function pintar(){
     }
     c.appendChild(pie); lista.appendChild(c);
   });
-  lista.appendChild(gestionBtn());
   const solos = inscritos.filter(p=>!p.equipo);
   if(solos.length){
-    const c = el("div","equipo"), h = el("header");
-    c.classList.add("buscan");
-    h.append(el("h3",null,"Buscan equipo"), el("span","estado falta",String(solos.length)));
-    const ul = el("ul"); solos.forEach(p=>ul.appendChild(el("li",null,String(p.nombre).split(" ")[0])));
-    const b = el("button","unir soy","Soy yo: unirme a un equipo"); b.type = "button";
+    const c = el("section","buscan-card"), h = el("header");
+    const t = el("div","bc-tit"); t.append(el("h3",null,"Buscan equipo"), el("small",null,"Aún sin equipo"));
+    h.append(t, el("span","bc-n",String(solos.length)));
+    const g = el("ul","personas");
+    solos.forEach(p=>{
+      const n = String(p.nombre).split(" ")[0], li = el("li","persona");
+      li.append(el("span","avatar",n.charAt(0).toUpperCase()), el("span","pn",n));
+      g.appendChild(li);
+    });
+    const b = el("button","btn soy","Soy yo: unirme a un equipo"); b.type = "button";
     b.addEventListener("click",()=>abrirCambio(solos));
-    const pie = el("div","eq-pie"); pie.appendChild(b);
-    c.append(h,ul,el("p","nota","¿Estás en esta lista? Únete tú a un equipo o crea el tuyo. Si no, os asignamos nosotros antes de la jornada."),pie);
+    c.append(h,g,b,el("p","bc-nota","Si no eliges, os asignamos un equipo antes de la jornada."));
     lista.appendChild(c);
   }
+  lista.appendChild(gestionBtn());
 
   const sel = $("equipo"), previo = sel.value; sel.textContent = "";
   const op = (v,t,dis)=>{ const o=el("option",null,t); o.value=v; o.disabled=!!dis; sel.appendChild(o); };
