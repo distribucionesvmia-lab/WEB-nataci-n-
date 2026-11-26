@@ -70,12 +70,63 @@ function cambiarEquipo_(d) {
   return { ok: true, nombre: String(datos[i][1]).split(' ')[0] };
 }
 
+// Busca la fila de una persona por su email. Devuelve { hoja, datos, i } o { error }.
+function buscarPersona_(email) {
+  email = String(email || '').trim().toLowerCase();
+  if (!email) return { error: 'Escribe tu email.' };
+  const hoja = hoja_();
+  const datos = hoja.getDataRange().getValues();
+  const i = datos.findIndex((f, n) => n > 0 && String(f[3]).trim().toLowerCase() === email);
+  if (i < 1) return { error: 'No encontramos ninguna inscripción con ese email.' };
+  return { hoja: hoja, datos: datos, i: i };
+}
+
+// El nombre del equipo y su teléfono viven en la fila de quien lo creó.
+// Si esa persona se va, se los pasamos a otro miembro para que el equipo no pierda su nombre.
+function liberarEquipo_(hoja, datos, i) {
+  const equipo = Number(datos[i][5]);
+  const nombre = datos[i][6];
+  if (!equipo || !nombre) return;
+  const heredero = datos.findIndex((f, n) => n > 0 && n !== i && Number(f[5]) === equipo);
+  if (heredero > 0) {
+    hoja.getRange(heredero + 1, 7).setValue(nombre);
+    if (datos[i][8]) hoja.getRange(heredero + 1, 9).setValue("'" + String(datos[i][8]));
+  }
+}
+
+// Salirse del equipo: vuelve a "Buscan equipo".
+function salirEquipo_(d) {
+  const r = buscarPersona_(d.email);
+  if (r.error) return { ok: false, error: r.error };
+  if (!r.datos[r.i][5]) return { ok: false, error: 'No estás en ningún equipo.' };
+  liberarEquipo_(r.hoja, r.datos, r.i);
+  r.hoja.getRange(r.i + 1, 6, 1, 2).setValues([['', '']]);
+  r.hoja.getRange(r.i + 1, 9).setValue('');
+  return { ok: true, nombre: String(r.datos[r.i][1]).split(' ')[0] };
+}
+
+// Darse de baja: se borra la inscripción y se libera la plaza.
+// Si ya está confirmada o pagada, hay que pedirlo a la organización.
+function baja_(d) {
+  const r = buscarPersona_(d.email);
+  if (r.error) return { ok: false, error: r.error };
+  const estado = String(r.datos[r.i][7] || '').trim().toLowerCase();
+  if (estado && estado !== 'pendiente de pago') {
+    return { ok: false, error: 'Tu inscripción ya está confirmada. Escríbenos a Olmedorebeca@hotmail.com para darte de baja.' };
+  }
+  liberarEquipo_(r.hoja, r.datos, r.i);
+  r.hoja.deleteRow(r.i + 1);
+  return { ok: true, nombre: String(r.datos[r.i][1]).split(' ')[0] };
+}
+
 function doPost(e) {
   const lock = LockService.getScriptLock();
   lock.waitLock(10000);
   try {
     const d = JSON.parse(e.postData.contents);
     if (d.accion === 'cambiarEquipo') return json_(cambiarEquipo_(d));
+    if (d.accion === 'salirEquipo') return json_(salirEquipo_(d));
+    if (d.accion === 'baja') return json_(baja_(d));
     const nombre = String(d.nombre || '').trim().slice(0, 60);
     const apellidos = String(d.apellidos || '').trim().slice(0, 100);
     const email = String(d.email || '').trim().toLowerCase().slice(0, 120);

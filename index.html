@@ -548,6 +548,17 @@ td{padding:8px}
   .card:not(.hero){padding:40px}
   .tablas{align-items:start;gap:32px}
 }
+
+.enlace{background:none;border:0;padding:0;font:inherit;color:var(--azul);font-weight:700;text-decoration:underline;cursor:pointer}
+.gestion{margin-top:12px;text-align:center}
+.gestion .enlace{font-size:.85rem}
+dialog#dlg2{border:0;padding:0;border-radius:22px;width:min(460px,calc(100vw - 28px));max-height:calc(100dvh - 28px);overflow:auto;box-shadow:0 30px 80px rgba(8,38,70,.35);color:var(--texto)}
+dialog#dlg2[open]{animation:dlgIn .45s var(--ease)}
+dialog#dlg2::backdrop{background:rgba(8,38,70,.45);-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px)}
+#f-gestion{padding:26px 22px 22px;position:relative;display:grid;gap:12px}
+#f-gestion .titulo{margin-bottom:6px;padding-right:36px;font-size:1.5rem}
+#f-gestion .btn{width:100%}
+#f-gestion .btn.peligro{background:#b3261e}
 </style>
 </head>
 <body>
@@ -720,6 +731,7 @@ td{padding:8px}
     <form id="f-cambio" novalidate>
       <button type="button" class="cerrar" id="dlg-x" aria-label="Cerrar">×</button>
       <h2 class="titulo deporte" id="dlg-t">Únete a un equipo</h2>
+      <p class="nota" id="c-aviso">Elige tu nombre de la lista de quienes buscan equipo. ¿No estás en la lista? <button type="button" class="enlace" id="c-ir-form">Apúntate en el formulario</button>.</p>
       <label for="c-quien">¿Quién eres?
         <select id="c-quien"></select>
       </label>
@@ -742,6 +754,27 @@ td{padding:8px}
       </label>
       <div id="c-msg" class="msg" role="status" hidden></div>
       <button class="btn" type="submit" id="c-enviar">Unirme</button>
+    </form>
+  </dialog>
+
+  <dialog id="dlg2" aria-labelledby="g-t">
+    <form id="f-gestion" novalidate>
+      <button type="button" class="cerrar" id="g-x" aria-label="Cerrar">×</button>
+      <h2 class="titulo deporte" id="g-t">Salir de un equipo o darte de baja</h2>
+      <label for="g-quien">¿Quién eres?
+        <select id="g-quien"></select>
+      </label>
+      <label for="g-email"><span>Tu email <small>(el que usaste al inscribirte, para confirmar que eres tú)</small></span>
+        <input id="g-email" type="email" autocomplete="email" inputmode="email" required maxlength="120">
+      </label>
+      <fieldset class="modo">
+        <legend>¿Qué quieres hacer?</legend>
+        <label class="op" id="g-op-salir"><input type="radio" name="g-modo" value="salir" checked><span>Salirme de mi equipo</span></label>
+        <label class="op"><input type="radio" name="g-modo" value="baja"><span>Darme de baja</span></label>
+      </fieldset>
+      <p class="nota" id="g-nota"></p>
+      <div id="g-msg" class="msg" role="status" hidden></div>
+      <button class="btn" type="submit" id="g-enviar">Salirme del equipo</button>
     </form>
   </dialog>
 
@@ -817,11 +850,16 @@ function pintar(){
     const pie = el("div","eq-pie");
     if(n<CONFIG.MAX_EQUIPO){
       const u = el("button","unir","Unirme"); u.type = "button";
-      u.addEventListener("click",()=>{ document.querySelector('input[name=modo][value=unir]').checked = true; $("equipo").value = String(e.id); cambio(); $("inscripcion").scrollIntoView({behavior:"smooth"}); setTimeout(()=>$("nombre").focus({preventScroll:true}),600); });
+      u.addEventListener("click",()=>{
+        const solos = inscritos.filter(p=>!p.equipo);
+        if(solos.length) return abrirCambio(solos, e.id);
+        document.querySelector('input[name=modo][value=unir]').checked = true; $("equipo").value = String(e.id); cambio(); $("inscripcion").scrollIntoView({behavior:"smooth"}); setTimeout(()=>$("nombre").focus({preventScroll:true}),600);
+      });
       pie.appendChild(u);
     }
     c.appendChild(pie); lista.appendChild(c);
   });
+  lista.appendChild(gestionBtn());
   const solos = inscritos.filter(p=>!p.equipo);
   if(solos.length){
     const c = el("div","equipo"), h = el("header");
@@ -868,21 +906,27 @@ function cCambio(){
   $("c-enviar").textContent = nuevo ? "Crear equipo y unirme" : "Unirme";
 }
 document.querySelectorAll('input[name=c-modo]').forEach(r=>r.addEventListener("change",cCambio));
-function abrirCambio(solos){
+function abrirCambio(solos, equipoId){
   const q = $("c-quien"); q.textContent = "";
   solos.forEach(p=>{ const o=el("option",null,String(p.nombre).split(" ")[0]); q.appendChild(o); });
   const s = $("c-equipo"); s.textContent = "";
   equipos().filter(e=>e.miembros.length<CONFIG.MAX_EQUIPO).forEach(e=>{
     const o = el("option",null,"Equipo "+(e.nombre||e.id)+" ("+e.miembros.length+"/"+CONFIG.MAX_EQUIPO+")"); o.value = e.id; s.appendChild(o);
   });
-  const hay = s.options.length>0;
+  const hay = s.options.length>0, fijo = !!equipoId && hay;
+  if(fijo) s.value = String(equipoId);
+  const e0 = equipos().find(x=>x.id===equipoId);
+  $("dlg-t").textContent = fijo && e0 ? "Unirme al equipo "+(e0.nombre||e0.id) : "Únete a un equipo";
+  document.querySelector('#f-cambio fieldset.modo').hidden = fijo;
+  $("c-lbl-unir").style.display = fijo ? "none" : "";
   document.querySelector('#c-op-unir input').disabled = !hay;
   document.querySelector('input[name=c-modo][value='+(hay?"unir":"nuevo")+']').checked = true;
   $("c-msg").hidden = true; $("c-email").value = ""; $("c-nombre").value = ""; $("c-tel").value = "";
-  cCambio();
+  cCambio(); if(fijo) $("c-lbl-unir").hidden = true;
   const d = $("dlg"); if(d.showModal) d.showModal(); else d.setAttribute("open","");
-  setTimeout(()=>$("c-email").focus(),50);
+  setTimeout(()=>$("c-quien").focus(),50);
 }
+$("c-ir-form").addEventListener("click",()=>{ $("dlg").close(); $("inscripcion").scrollIntoView({behavior:"smooth"}); });
 $("dlg-x").addEventListener("click",()=>$("dlg").close());
 $("dlg").addEventListener("click",e=>{ if(e.target===$("dlg")) $("dlg").close(); });
 $("f-cambio").addEventListener("submit", async ev=>{
@@ -917,6 +961,75 @@ $("f-cambio").addEventListener("submit", async ev=>{
     $("equipos").scrollIntoView({behavior:"smooth",block:"start"});
   }catch(err){ cMostrar(err.message||"No se pudo hacer el cambio.","err"); }
   finally{ $("c-enviar").disabled = false; }
+});
+
+/* ===== Gestionar mi inscripción: salir del equipo o darse de baja ===== */
+function gestionBtn(){
+  const w = el("p","gestion"), b = el("button","enlace","¿Ya estás inscrito? Salir de un equipo o darte de baja"); b.type = "button";
+  b.addEventListener("click",abrirGestion); w.appendChild(b); return w;
+}
+const gModo = () => document.querySelector('input[name=g-modo]:checked').value;
+function gMostrar(t,tipo){ const m=$("g-msg"); m.textContent=t; m.className="msg "+tipo; m.hidden=false; }
+function gCambio(){
+  const baja = gModo()==="baja", btn = $("g-enviar");
+  btn.textContent = baja ? "Darme de baja" : "Salirme del equipo";
+  btn.classList.toggle("peligro", baja);
+  $("g-nota").textContent = baja ? "Se borra tu inscripción y se libera tu plaza. Si ya has pagado, escríbenos para la baja." : "Vuelves a la lista de quienes buscan equipo. Tu inscripción sigue en pie.";
+}
+function gQuien(){
+  const i = Number($("g-quien").value), p = inscritos[i];
+  const salir = document.querySelector('#g-op-salir input');
+  salir.disabled = !(p && p.equipo);
+  if(salir.disabled && gModo()==="salir") document.querySelector('input[name=g-modo][value=baja]').checked = true;
+  gCambio();
+}
+document.querySelectorAll('input[name=g-modo]').forEach(r=>r.addEventListener("change",gCambio));
+$("g-quien").addEventListener("change",gQuien);
+function abrirGestion(){
+  const eq = equipos(), q = $("g-quien"); q.textContent = "";
+  inscritos.forEach((p,i)=>{
+    const e = p.equipo ? eq.find(x=>x.id===Number(p.equipo)) : null;
+    const o = el("option",null,String(p.nombre).split(" ")[0]+" · "+(e?"Equipo "+(e.nombre||e.id):"busca equipo")); o.value = i; q.appendChild(o);
+  });
+  if(!inscritos.length) return mostrar("Todavía no hay nadie inscrito.","err");
+  document.querySelector('input[name=g-modo][value=salir]').checked = true;
+  $("g-msg").hidden = true; $("g-email").value = ""; gQuien();
+  const d = $("dlg2"); if(d.showModal) d.showModal(); else d.setAttribute("open","");
+  setTimeout(()=>$("g-email").focus(),50);
+}
+$("g-x").addEventListener("click",()=>$("dlg2").close());
+$("dlg2").addEventListener("click",e=>{ if(e.target===$("dlg2")) $("dlg2").close(); });
+$("f-gestion").addEventListener("submit", async ev=>{
+  ev.preventDefault(); $("g-msg").hidden = true;
+  const email = $("g-email").value.trim(), baja = gModo()==="baja";
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return gMostrar("Escribe el email con el que te inscribiste.","err");
+  if(baja && !confirm("¿Seguro que quieres darte de baja? Se borrará tu inscripción.")) return;
+  $("g-enviar").disabled = true;
+  try{
+    let nombre = String($("g-quien").selectedOptions[0].textContent).split(" ")[0];
+    if(demo){
+      const l = leerLocal(), i = l.findIndex(x=>x.email && x.email.toLowerCase()===email.toLowerCase());
+      if(i<0) throw new Error("No encontramos ninguna inscripción con ese email.");
+      nombre = l[i].nombre;
+      if(baja){ l.splice(i,1); }
+      else{
+        if(!l[i].equipo) throw new Error("No estás en ningún equipo.");
+        const eqId = l[i].equipo, nom = l[i].equipoNombre, tel = l[i].telefono;
+        l[i].equipo = null; l[i].equipoNombre = ""; l[i].telefono = "";
+        const h = l.find(x=>x.equipo===eqId); if(h && nom){ h.equipoNombre = nom; h.telefono = tel; }
+      }
+      guardarLocal(l);
+    }else{
+      const j = await (await fetch(CONFIG.ENDPOINT,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify({accion:baja?"baja":"salirEquipo",email})})).json();
+      if(!j.ok) throw new Error(j.error||"No se pudo hacer el cambio.");
+      if(j.nombre) nombre = j.nombre;
+    }
+    $("dlg2").close();
+    await cargar();
+    mostrar(baja ? "Hecho, "+nombre+": te hemos dado de baja y tu plaza queda libre." : "Hecho, "+nombre+": has salido del equipo y vuelves a buscar equipo.","ok");
+    $("equipos").scrollIntoView({behavior:"smooth",block:"start"});
+  }catch(err){ gMostrar(err.message||"No se pudo hacer el cambio.","err"); }
+  finally{ $("g-enviar").disabled = false; }
 });
 
 function mostrar(t,tipo){ const m=$("msg"); m.textContent=t; m.className="msg "+tipo; m.hidden=false; }
