@@ -9,7 +9,7 @@
 <meta name="description" content="Jornada de natación solidaria contra la diabetes. Domingo 20 de diciembre de 2026, 10:00 h, piscina cubierta de Medina del Campo. Inscríbete aquí.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@700;800&family=Nunito+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,600;0,700;0,800;1,700;1,800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
 /* Plan: una sola pantalla de información + inscripción. Azul piscina, naranja de la llama del club como acento.
    Orden: portada con datos clave · apoyos · qué se hace · inscripción + inscritos · cuentas · contacto. */
@@ -23,8 +23,8 @@
   --linea:#d5e4f1;
   --ok:#1d7a45;
   --error:#b3261e;
-  --display:"Baloo 2",system-ui,-apple-system,"Segoe UI",sans-serif;
-  --body:"Nunito Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --display:"Barlow Condensed",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --body:"Inter",system-ui,-apple-system,"Segoe UI",sans-serif;
   color-scheme:light;
 }
 *{box-sizing:border-box}
@@ -452,6 +452,93 @@ footer a{color:#ffd7bf}
   .fotos figure:hover{transform:translateY(-4px);box-shadow:0 18px 40px rgba(12,53,99,.22)}
 }
 @media (prefers-reduced-motion:reduce){.burbujas{display:none}.js .rv{filter:none}}
+
+/* ===== Acabado profesional ===== */
+:root{--sombra:0 1px 2px rgba(12,53,99,.04),0 8px 28px rgba(12,53,99,.06);--borde:rgba(12,53,99,.08)}
+body{font-size:15.5px;letter-spacing:-.005em;-webkit-font-smoothing:antialiased}
+h1,h2,h3{letter-spacing:0}
+.card{border:1px solid var(--borde);box-shadow:var(--sombra)}
+@media (hover:hover){.card:not(.hero):hover{box-shadow:0 1px 2px rgba(12,53,99,.05),0 16px 40px rgba(12,53,99,.09)}}
+
+/* Cabecera */
+.top b{font:800 1.15rem/1 var(--display);text-transform:uppercase;letter-spacing:.02em;font-style:italic}
+.top small{font-weight:500;font-size:.72rem;letter-spacing:.02em}
+
+/* Portada */
+.etiqueta{font-size:.7rem;letter-spacing:.14em;padding:5px 12px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.22);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
+.hero h1{font-weight:800;letter-spacing:.005em;line-height:.92;text-shadow:0 2px 24px rgba(0,0,0,.25)}
+.hero .lema{font-weight:600;letter-spacing:.01em}
+.claves small{font-weight:600;font-size:.66rem;letter-spacing:.12em;opacity:.7}
+.claves b{font-weight:600}
+.cuenta b{font-weight:800}
+.cuenta small{font-weight:600;letter-spacing:.1em}
+.btn{font-weight:700;letter-spacing:.01em}
+.lugar-hero{font-weight:800;letter-spacing:.04em}
+.lugar-hero::after{font-weight:600;letter-spacing:.18em}
+
+/* Títulos de sección: línea fina en vez de franjas */
+.titulo.deporte{font-size:1.7rem;font-weight:800;font-style:italic;letter-spacing:.01em;gap:12px}
+.titulo.deporte::before{width:26px;height:3px;border-radius:2px;background:var(--llama);transform:none}
+.apoyos h2{font:600 .72rem var(--body);letter-spacing:.2em;color:var(--suave)}
+
+/* Apoyos: logos limpios, etiquetas discretas */
+.logo{border:1px solid var(--borde);background:#fff;padding:14px 10px 12px}
+.logo span{font-size:.62rem;font-weight:600;letter-spacing:.14em;color:var(--suave)}
+.logo:nth-child(1) span{color:var(--llama)}
+.instituciones{font-size:.8rem}
+
+/* Calles: más sobrias */
+.calles{background:linear-gradient(180deg,#f3f9fe,#e8f3fc);border:1px solid #d6e8f6;border-radius:16px}
+.calle+.calle::before{height:2px;top:-1px;opacity:.35;left:16px;right:16px}
+.calle .num{border-radius:50%;background:#fff;color:var(--azul);box-shadow:0 0 0 1px #d6e8f6,0 4px 10px rgba(26,111,192,.1);font-weight:800}
+.calle b{font-weight:700;font-size:1.15rem;letter-spacing:.01em}
+.calle p{color:var(--suave)}
+.causa{border-left:3px solid var(--llama);font-size:1rem;color:var(--texto)}
+
+/* Fotos */
+.fotos figure{border:0;outline:0;box-shadow:0 10px 30px rgba(12,53,99,.14)}
+.fotos figure::after{height:4px;opacity:.9}
+.fotos figcaption{font-weight:600;letter-spacing:.02em;-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);background:rgba(12,53,99,.7)}
+
+/* Formulario */
+label{font-weight:600;font-size:.86rem}
+input[type=text],input[type=email],input[type=tel],select{border:1px solid #c9d9e8;border-radius:10px;background:#fbfdff}
+input[type=tel]{font:16px var(--body);color:var(--texto);padding:10px 12px;width:100%;min-height:48px;-webkit-appearance:none;appearance:none}
+input:focus,select:focus{background:#fff;border-color:var(--azul);outline:3px solid rgba(26,111,192,.15)}
+.reglas li{font-weight:600;font-size:.8rem;background:#fff;border:1px solid var(--borde)}
+.op span{font-weight:600;border-width:1px}
+.modo legend{font-weight:600;font-size:.86rem}
+
+/* Inscritos */
+.lista-head b{font-weight:800}
+.equipo{border:1px solid var(--borde);border-left:3px solid var(--azul);border-radius:12px;background:#fff}
+.equipo h3{font-family:var(--display);font-weight:800;font-size:1.15rem}
+.equipo li{font-size:.82rem;font-weight:500;border:1px solid var(--borde);background:var(--fondo)}
+.estado{font-weight:700;letter-spacing:.02em}
+.eq-pie a,.eq-pie .unir{font-weight:600}
+
+/* Cuentas */
+details summary{font-weight:700}
+.neta{font-weight:800;font-size:1.35rem}
+th{font-weight:600;letter-spacing:.12em;font-size:.68rem}
+td{padding:8px}
+.real td{font-weight:700}
+.resultado{font-weight:700}
+.resultado b{font-weight:800;font-size:2rem}
+
+/* Pie */
+.pie-marca{font-weight:800;letter-spacing:.03em;font-size:1.6rem}
+
+@media (min-width:900px){
+  .titulo.deporte{font-size:2.1rem}
+  .hero h1{font-size:clamp(4rem,6.6vw,6.4rem)}
+  .lugar-hero{font-size:1.05rem;letter-spacing:.22em;opacity:.95;margin-bottom:14px}
+  .lugar-hero::after{display:inline;margin-left:12px;padding-left:12px;border-left:1px solid rgba(255,255,255,.4);opacity:.75}
+  .consiste{grid-template-rows:auto 1fr;align-items:start}
+  .consiste .causa{align-self:start;font-size:1.1rem;line-height:1.65}
+  .card:not(.hero){padding:40px}
+  .tablas{align-items:start;gap:32px}
+}
 </style>
 </head>
 <body>
