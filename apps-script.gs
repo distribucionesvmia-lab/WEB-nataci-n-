@@ -1,9 +1,15 @@
 // Cien por Cien Solidarios: guarda las inscripciones en una hoja de Google.
-// Hoja con esta primera fila (A1:H1):
-// fecha | nombre | apellidos | email | club | equipo | equipoNombre | estado | telefono
+// Hoja con esta primera fila (A1:J1):
+// fecha | nombre | apellidos | email | club | equipo | equipoNombre | estado | telefono | imagen
 
 const MAX_PARTICIPANTES = 100;
 const MAX_EQUIPO = 10;
+const ESPERA = 'Lista de espera';
+
+// ¿Esta fila está en lista de espera?
+function esEspera_(f) {
+  return String(f[7] || '').trim().toLowerCase() === ESPERA.toLowerCase();
+}
 
 // Pega aquí el ID de tu hoja: está en su dirección, entre /d/ y /edit
 const SHEET_ID = 'PEGA_AQUI_EL_ID_DE_TU_HOJA';
@@ -25,7 +31,8 @@ function doGet() {
     .map(f => ({
       nombre: String(f[1]).split(' ')[0],
       equipo: f[5] ? Number(f[5]) : null,
-      equipoNombre: f[6] ? String(f[6]) : ''
+      equipoNombre: f[6] ? String(f[6]) : '',
+      espera: esEspera_(f)
     }));
   return json_(lista);
 }
@@ -58,6 +65,7 @@ function cambiarEquipo_(d) {
   const datos = hoja.getDataRange().getValues();
   const i = datos.findIndex((f, n) => n > 0 && String(f[3]).trim().toLowerCase() === email);
   if (i < 1) return { ok: false, error: 'No encontramos ninguna inscripción con ese email.' };
+  if (esEspera_(datos[i])) return { ok: false, error: 'Estás en la lista de espera: cuando tengas plaza podrás unirte a un equipo.' };
   if (datos[i][5]) return { ok: false, error: 'Ya estás en un equipo.' };
 
   const otras = datos.slice(1).filter((f, n) => f[1] && n + 1 !== i);
@@ -111,11 +119,18 @@ function baja_(d) {
   const r = buscarPersona_(d.email);
   if (r.error) return { ok: false, error: r.error };
   const estado = String(r.datos[r.i][7] || '').trim().toLowerCase();
-  if (estado && estado !== 'pendiente de pago') {
+  const enEspera = esEspera_(r.datos[r.i]);
+  if (estado && estado !== 'pendiente de pago' && !enEspera) {
     return { ok: false, error: 'Tu inscripción ya está confirmada. Escríbenos a Olmedorebeca@hotmail.com para darte de baja.' };
   }
   liberarEquipo_(r.hoja, r.datos, r.i);
   r.hoja.deleteRow(r.i + 1);
+  // Si quien se va tenía plaza, la primera persona de la lista de espera pasa a tenerla.
+  if (!enEspera) {
+    const datos = r.hoja.getDataRange().getValues();
+    const k = datos.findIndex((f, n) => n > 0 && f[1] && esEspera_(f));
+    if (k > 0) r.hoja.getRange(k + 1, 8).setValue('Pendiente de pago');
+  }
   return { ok: true, nombre: String(r.datos[r.i][1]).split(' ')[0] };
 }
 
@@ -137,11 +152,21 @@ function doPost(e) {
     const hoja = hoja_();
     const filas = hoja.getDataRange().getValues().slice(1).filter(f => f[1]);
 
-    if (filas.length >= MAX_PARTICIPANTES) {
-      return json_({ ok: false, error: 'Las plazas están completas.' });
-    }
     if (filas.some(f => String(f[3]).toLowerCase() === email)) {
       return json_({ ok: false, error: 'Ya existe una inscripción con ese email.' });
+    }
+    const imagen = d.imagen === 'Sí' ? 'Sí' : 'No';
+
+    // Plazas cubiertas: se apunta a la lista de espera, sin equipo.
+    const conPlaza = filas.filter(f => !esEspera_(f)).length;
+    if (conPlaza >= MAX_PARTICIPANTES) {
+      hoja.appendRow([
+        new Date(), nombre, apellidos, email,
+        String(d.club || '').slice(0, 80),
+        '', '', ESPERA, '', imagen
+      ]);
+      const puesto = filas.filter(f => esEspera_(f)).length + 1;
+      return json_({ ok: true, espera: true, puesto: puesto });
     }
 
     const equipo = d.equipo ? Number(d.equipo) : '';
@@ -158,7 +183,8 @@ function doPost(e) {
       equipo,
       equipoNombre,
       'Pendiente de pago',
-      telefono ? "'" + telefono : ''
+      telefono ? "'" + telefono : '',
+      imagen
     ]);
     return json_({ ok: true });
   } catch (err) {

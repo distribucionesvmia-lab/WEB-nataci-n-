@@ -928,6 +928,27 @@ footer{margin-top:60px;padding:40px 22px;background:#082646}
   .hero2 .cuenta div+div::before{font-size:3.1rem}
 }
 @media (prefers-reduced-motion:reduce){.hero2 .cuenta b.tick{animation:none}}
+
+/* Lista de espera */
+.aviso-espera{display:grid;gap:4px;margin:0 0 16px;padding:14px 16px;border-radius:12px;background:#fff4ec;border:1px solid #f5d0b5;border-left:5px solid var(--llama);font-size:.9rem;line-height:1.45;color:var(--texto)}
+.aviso-espera b{color:var(--marino)}
+.n-espera{margin-left:6px;font-size:.85rem;color:#a6460f;font-weight:600}
+#inscripcion .espera-card{margin-top:2px;padding:16px 18px;border-radius:18px;border:1px dashed #c3cfdc;background:#f8fafc}
+.espera-card header{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:10px}
+#inscripcion .espera-card .bc-n{background:#5b6b7f;box-shadow:none}
+.lista-espera{margin:0;padding:0 0 0 1.6em;display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:4px 16px;font-weight:600;color:var(--marino)}
+.lista-espera li::marker{color:var(--suave);font-weight:700}
+
+/* Protección de datos */
+.check a{color:var(--azul);font-weight:600;white-space:nowrap}
+.privacidad{max-width:760px;margin:18px auto 0;text-align:left;border:1px solid rgba(255,255,255,.18);border-radius:10px;padding:0}
+.privacidad summary{cursor:pointer;list-style:none;padding:12px 16px;font-weight:600;color:#fff;display:flex;justify-content:space-between;align-items:center}
+.privacidad summary::-webkit-details-marker{display:none}
+.privacidad summary::after{content:"+";font-size:1.2rem;line-height:1;color:#ffb27d;border:0;padding:0;background:none}
+.privacidad[open] summary::after{content:"−"}
+.priv-txt{padding:0 16px 14px;display:grid;gap:8px;font-size:.82rem;line-height:1.55;color:rgba(255,255,255,.75)}
+.priv-txt b{color:#fff}
+.priv-txt a{color:#ffd7bf}
 </style>
 </head>
 <body>
@@ -1055,6 +1076,10 @@ footer{margin-top:60px;padding:40px 22px;background:#082646}
           <li><b>Elige cómo participar:</b> busca equipo, únete a uno o crea el tuyo.</li>
           <li><b>Pulsa «Enviar inscripción»</b> y saldrás en la lista de inscritos.</li>
         </ol>
+        <div class="aviso-espera" id="aviso-espera" hidden>
+          <b>Las 100 plazas están cubiertas.</b>
+          <span>Puedes apuntarte a la <b>lista de espera</b>: si alguien se da de baja, la primera persona de la lista pasa a tener plaza y la organización le avisa.</span>
+        </div>
         <form id="form" novalidate>
           <div class="fila">
             <label for="nombre">Nombre
@@ -1088,7 +1113,11 @@ footer{margin-top:60px;padding:40px 22px;background:#082646}
           </label>
           <label class="check" for="rgpd">
             <input id="rgpd" type="checkbox" required>
-            <span>Acepto que mis datos se usen solo para gestionar esta jornada y que mi nombre de pila aparezca en la lista de inscritos.</span>
+            <span>Acepto que mis datos se usen solo para gestionar esta jornada y que mi nombre de pila aparezca en la lista de inscritos. <a href="#privacidad" class="ver-priv">Ver protección de datos</a></span>
+          </label>
+          <label class="check" for="img-ok">
+            <input id="img-ok" type="checkbox">
+            <span><b>Opcional:</b> acepto aparecer en fotos o vídeos de la jornada que se publiquen para darla a conocer.</span>
           </label>
           <div id="msg" class="msg" role="status" hidden></div>
           <button class="btn" type="submit" id="enviar">Enviar inscripción</button>
@@ -1099,7 +1128,7 @@ footer{margin-top:60px;padding:40px 22px;background:#082646}
       <div id="equipos">
         <h2 class="titulo deporte">Inscritos</h2>
         <p class="guia"><b>¿Cómo se usa?</b> Pulsa <b>Unirme</b> en un equipo para entrar en él. Si ya te apuntaste sin equipo, busca tu nombre en <b>Buscan equipo</b> y pulsa <b>Soy yo</b>.</p>
-        <div class="lista-head"><b id="total">0</b><span>de 100 plazas</span></div>
+        <div class="lista-head"><b id="total">0</b><span>de 100 plazas</span><span class="n-espera" id="n-espera" hidden></span></div>
         <div class="barra" aria-hidden="true"><i id="barra"></i><span class="meta">META</span></div>
         <div class="equipos" id="lista"></div>
       </div>
@@ -1197,6 +1226,18 @@ footer{margin-top:60px;padding:40px 22px;background:#082646}
       <p class="pie-marca">Cien por Cien Solidarios</p>
       <p>Domingo 20 de diciembre de 2026 · 10:00 h · Piscina cubierta municipal de Medina del Campo</p>
       <p>¿Dudas? Escríbenos a <a href="mailto:Olmedorebeca@hotmail.com">Olmedorebeca@hotmail.com</a></p>
+      <details class="privacidad" id="privacidad">
+        <summary>Protección de datos</summary>
+        <div class="priv-txt">
+          <p><b>Quién trata tus datos:</b> la organización de Cien por Cien Solidarios (Club Triatlón Bomberos Valladolid). Contacto: <a href="mailto:Olmedorebeca@hotmail.com">Olmedorebeca@hotmail.com</a>.</p>
+          <p><b>Para qué:</b> gestionar tu inscripción y el pago, formar los equipos y avisarte de cualquier cosa sobre la jornada.</p>
+          <p><b>Qué datos:</b> nombre, apellidos, email, club (opcional) y, si creas un equipo, un teléfono de contacto. En la web solo se publica tu nombre de pila y tu equipo.</p>
+          <p><b>Con qué base:</b> tu consentimiento al marcar la casilla del formulario. Las fotos y vídeos solo se publican si das tu permiso en la casilla opcional.</p>
+          <p><b>Dónde se guardan:</b> en una hoja de cálculo de Google de la organización. No se ceden ni se venden a nadie.</p>
+          <p><b>Cuánto tiempo:</b> hasta que termine la jornada y se cierren las cuentas; después se borran.</p>
+          <p><b>Tus derechos:</b> puedes pedir ver, corregir o borrar tus datos, o retirar tu consentimiento, escribiendo al email de arriba. También puedes darte de baja tú mismo desde la lista de inscritos. Si crees que no se respetan tus derechos, puedes reclamar ante la Agencia Española de Protección de Datos (aepd.es).</p>
+        </div>
+      </details>
       <p class="derechos">© 2026 <b>Pablo Martín Castañeda</b>. Todos los derechos reservados sobre el diseño y la creación de esta página web.<br>Los logotipos y las imágenes pertenecen a sus respectivos propietarios. Se han obtenido de internet y se usan sin ánimo de lucro, únicamente para dar a conocer esta jornada solidaria y sin hacer ningún mal uso de ellos. Si eres titular de alguna y quieres que se retire, escribe a <a href="mailto:pablitocastaneda06@gmail.com">pablitocastaneda06@gmail.com</a>.</p>
     </div>
   </footer>
@@ -1216,17 +1257,20 @@ const CONFIG = {
 
 const $ = id => document.getElementById(id);
 const demo = !CONFIG.ENDPOINT;
-let inscritos = [];
+let inscritos = [], espera = [], todos = [];
+const lleno = () => inscritos.length >= CONFIG.PLAZAS;
 
 function leerLocal(){ try{ return JSON.parse(localStorage.getItem("cpc_inscritos")||"[]"); }catch(e){ return []; } }
 function guardarLocal(l){ try{ localStorage.setItem("cpc_inscritos",JSON.stringify(l)); }catch(e){} }
 
 async function cargar(){
-  if(demo){ inscritos = leerLocal(); }
+  if(demo){ todos = leerLocal(); }
   else{
-    try{ inscritos = await (await fetch(CONFIG.ENDPOINT)).json(); }
-    catch(e){ inscritos = []; mostrar("No se ha podido cargar la lista de inscritos. Recarga la página en un rato.","err"); }
+    try{ todos = await (await fetch(CONFIG.ENDPOINT)).json(); }
+    catch(e){ todos = []; mostrar("No se ha podido cargar la lista de inscritos. Recarga la página en un rato.","err"); }
   }
+  inscritos = todos.filter(p=>!p.espera);
+  espera = todos.filter(p=>p.espera);
   pintar();
 }
 
@@ -1305,7 +1349,22 @@ function pintar(){
     c.append(h,wrap,el("p","bc-nota","Pulsa «Soy yo» en tu fila para unirte a un equipo o crear el tuyo. Si no eliges, os asignamos uno antes de la jornada."));
     lista.appendChild(c);
   }
+  if(espera.length){
+    const c = el("section","espera-card"), h = el("header");
+    const t = el("div","bc-tit"); t.append(el("h3",null,"Lista de espera"), el("small",null,"Por orden de inscripción"));
+    h.append(t, el("span","bc-n",String(espera.length)));
+    const ol = el("ol","lista-espera");
+    espera.forEach(p=>ol.appendChild(el("li",null,String(p.nombre).split(" ")[0])));
+    c.append(h,ol,el("p","bc-nota","Si alguien se da de baja, la primera persona de la lista pasa a tener plaza."));
+    lista.appendChild(c);
+  }
   lista.appendChild(gestionBtn());
+  const ne = $("n-espera"); ne.hidden = !espera.length; ne.textContent = "· "+espera.length+" en lista de espera";
+  const full = lleno();
+  $("aviso-espera").hidden = !full;
+  document.querySelector('#form fieldset.modo').hidden = full;
+  if(full) document.querySelector('input[name=modo][value=solo]').checked = true;
+  $("enviar").textContent = full ? "Apuntarme a la lista de espera" : "Enviar inscripción";
 
   const sel = $("equipo"), previo = sel.value; sel.textContent = "";
   const op = (v,t,dis)=>{ const o=el("option",null,t); o.value=v; o.disabled=!!dis; sel.appendChild(o); };
@@ -1327,7 +1386,7 @@ function cambio(){
   const m = modo(), nuevo = m==="nuevo";
   $("lbl-unir").hidden = m!=="unir"; $("equipo").required = m==="unir";
   $("lbl-nuevo").hidden = !nuevo; $("lbl-tel").hidden = !nuevo; $("equipoNombre").required = nuevo; $("telefono").required = nuevo;
-  $("nota-modo").textContent = NOTAS[m];
+  $("nota-modo").textContent = lleno() ? "Entrarás en la lista de espera. Cuando tengas plaza podrás unirte a un equipo." : NOTAS[m];
 }
 document.querySelectorAll('input[name=modo]').forEach(r=>r.addEventListener("change",cambio));
 
@@ -1413,7 +1472,7 @@ function gCambio(){
   $("g-nota").textContent = baja ? "Se borra tu inscripción y se libera tu plaza. Si ya has pagado, escríbenos para la baja." : "Vuelves a la lista de quienes buscan equipo. Tu inscripción sigue en pie.";
 }
 function gQuien(){
-  const i = Number($("g-quien").value), p = inscritos[i];
+  const i = Number($("g-quien").value), p = todos[i];
   const salir = document.querySelector('#g-op-salir input');
   salir.disabled = !(p && p.equipo);
   if(salir.disabled && gModo()==="salir") document.querySelector('input[name=g-modo][value=baja]').checked = true;
@@ -1423,11 +1482,11 @@ document.querySelectorAll('input[name=g-modo]').forEach(r=>r.addEventListener("c
 $("g-quien").addEventListener("change",gQuien);
 function abrirGestion(){
   const eq = equipos(), q = $("g-quien"); q.textContent = "";
-  inscritos.forEach((p,i)=>{
+  todos.forEach((p,i)=>{
     const e = p.equipo ? eq.find(x=>x.id===Number(p.equipo)) : null;
-    const o = el("option",null,String(p.nombre).split(" ")[0]+" · "+(e?"Equipo "+(e.nombre||e.id):"busca equipo")); o.value = i; q.appendChild(o);
+    const o = el("option",null,String(p.nombre).split(" ")[0]+" · "+(p.espera?"lista de espera":e?"Equipo "+(e.nombre||e.id):"busca equipo")); o.value = i; q.appendChild(o);
   });
-  if(!inscritos.length) return mostrar("Todavía no hay nadie inscrito.","err");
+  if(!todos.length) return mostrar("Todavía no hay nadie inscrito.","err");
   document.querySelector('input[name=g-modo][value=salir]').checked = true;
   $("g-msg").hidden = true; $("g-email").value = ""; gQuien();
   const d = $("dlg2"); if(d.showModal) d.showModal(); else d.setAttribute("open","");
@@ -1447,7 +1506,10 @@ $("f-gestion").addEventListener("submit", async ev=>{
       const l = leerLocal(), i = l.findIndex(x=>x.email && x.email.toLowerCase()===email.toLowerCase());
       if(i<0) throw new Error("No encontramos ninguna inscripción con ese email.");
       nombre = l[i].nombre;
-      if(baja){ l.splice(i,1); }
+      if(baja){
+        const teniaPlaza = !l[i].espera; l.splice(i,1);
+        if(teniaPlaza){ const pr = l.find(x=>x.espera); if(pr) delete pr.espera; }
+      }
       else{
         if(!l[i].equipo) throw new Error("No estás en ningún equipo.");
         const eqId = l[i].equipo, nom = l[i].equipoNombre, tel = l[i].telefono;
@@ -1468,6 +1530,11 @@ $("f-gestion").addEventListener("submit", async ev=>{
   finally{ $("g-enviar").disabled = false; }
 });
 
+/* "Ver protección de datos": abre el desplegable del pie */
+document.querySelectorAll('a[href="#privacidad"]').forEach(a=>a.addEventListener("click",ev=>{
+  ev.preventDefault(); const d = $("privacidad"); d.open = true; d.scrollIntoView({behavior:"smooth",block:"center"});
+}));
+
 function mostrar(t,tipo){ const m=$("msg"); m.textContent=t; m.className="msg "+tipo; m.hidden=false; }
 
 $("form").addEventListener("submit", async ev=>{
@@ -1476,7 +1543,6 @@ $("form").addEventListener("submit", async ev=>{
   if(!nombre||!apellidos) return mostrar("Escribe tu nombre y tus apellidos.","err");
   if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return mostrar("Revisa el email: lo necesitamos para confirmarte la plaza.","err");
   if(!$("rgpd").checked) return mostrar("Marca la casilla de aceptación para continuar.","err");
-  if(inscritos.length>=CONFIG.PLAZAS) return mostrar("Las 100 plazas están completas. Escríbenos y te avisamos si queda alguna libre.","err");
 
   const eq = equipos(), v = modo()==="unir" ? $("equipo").value : modo();
   let equipo = null, equipoNombre = "", telefono = "";
@@ -1493,19 +1559,24 @@ $("form").addEventListener("submit", async ev=>{
     const e = eq.find(x=>x.id===equipo);
     if(!e||e.miembros.length>=CONFIG.MAX_EQUIPO) return mostrar("Ese equipo ya está completo. Elige otro.","err");
   }
-  const reg = {nombre,apellidos,email,club:$("club").value.trim(),equipo,equipoNombre,telefono};
+  if(lleno()){ equipo = null; equipoNombre = ""; telefono = ""; }
+  const reg = {nombre,apellidos,email,club:$("club").value.trim(),equipo,equipoNombre,telefono,imagen:$("img-ok").checked?"Sí":"No"};
+  let res = {};
   $("enviar").disabled = true;
   try{
     if(demo){
       const l = leerLocal();
       if(l.some(p=>p.email&&p.email.toLowerCase()===email.toLowerCase())) throw new Error("Ya hay una inscripción con ese email.");
+      if(l.filter(p=>!p.espera).length>=CONFIG.PLAZAS){ reg.espera = true; reg.equipo = null; res = {espera:true, puesto:l.filter(p=>p.espera).length+1}; }
       l.push(reg); guardarLocal(l);
     }else{
       const j = await (await fetch(CONFIG.ENDPOINT,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify(reg)})).json();
       if(!j.ok) throw new Error(j.error||"No se pudo guardar la inscripción.");
+      res = j;
     }
     $("form").reset();
-    mostrar("¡Hecho, "+nombre+"! Ya estás en la lista.","ok");
+    if(res.espera) mostrar("Apuntado, "+nombre+": estás en la lista de espera (puesto "+res.puesto+"). Si se libera una plaza, la organización te avisará.","ok");
+    else mostrar("¡Hecho, "+nombre+"! Ya estás en la lista.","ok");
     await cargar();
   }catch(err){ mostrar(err.message||"No se pudo guardar. Inténtalo de nuevo.","err"); }
   finally{ $("enviar").disabled = false; }
