@@ -1131,7 +1131,7 @@ function pintar(){
     solos.forEach((p,i)=>{
       const n = String(p.nombre).split(" ")[0], tr = el("tr");
       const td0 = el("td","num",String(i+1)), td1 = el("td","nom"), in1 = el("div","nom-in");
-      in1.append(el("span","avatar",n.charAt(0).toUpperCase()), el("span","pn",n)); td1.appendChild(in1);
+      in1.append(el("span","pn",n)); td1.appendChild(in1);
       const td2 = el("td","est"); td2.appendChild(el("span","tag","Sin equipo"));
       const td3 = el("td","acc"), b = el("button","btn soy","Soy yo"); b.type = "button";
       b.setAttribute("aria-label","Soy "+n+": unirme a un equipo"); b.title = "Soy "+n+": elegir un equipo o crear el mío";
