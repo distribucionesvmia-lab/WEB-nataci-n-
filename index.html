@@ -957,6 +957,11 @@ footer{margin-top:60px;padding:40px 22px;background:#082646}
 .aviso-cierre.fin{background:#fdeceb;border-color:#f3c7c3}
 .aviso-cierre.fin svg{color:var(--error)}
 .aviso-cierre.fin b{color:var(--error)}
+
+/* Cuentas: inscripciones realizadas (informativo, no suma) */
+tr.realizadas td{font-weight:400;color:var(--suave);font-style:italic;font-size:.84rem;padding-top:2px}
+tr.realizadas td:first-child{padding-left:18px}
+tr.realizadas small{display:block;font-style:normal;font-size:.72rem;color:#8a97a8;margin-top:2px}
 </style>
 </head>
 <body>
@@ -1164,7 +1169,8 @@ footer{margin-top:60px;padding:40px 22px;background:#082646}
           <table>
             <thead><tr><th>Ingresos previstos</th><th>€</th></tr></thead>
             <tbody>
-              <tr><td>Inscripciones (100 × 10 €)</td><td>1.000</td></tr>
+              <tr><td>Inscripciones estimadas (100 × 10 €)</td><td>1.000</td></tr>
+              <tr class="realizadas"><td>↳ Inscripciones realizadas hasta hoy (<span id="cu-n">0</span> × 10 €) <small>pendientes de pago: se formalizan y se pagan el día del evento</small></td><td id="cu-imp">0</td></tr>
               <tr><td>Colaboradores</td><td>500</td></tr>
               <tr class="real"><td>Churrería Los Jardines de Versalles</td><td>50</td></tr>
               <tr class="real"><td>Garaje Maito</td><td>50</td></tr>
@@ -1175,7 +1181,7 @@ footer{margin-top:60px;padding:40px 22px;background:#082646}
           </table>
         </div>
         <div class="resultado"><span>Donación estimada a la Asociación de Diabetes Valladolid <small>(ingresos 1.730 − gastos 930)</small></span><b>800 €</b></div>
-        <p class="leyenda"><b>En negrita</b>: importes ya confirmados. El resto son estimaciones.</p>
+        <p class="leyenda"><b>En negrita</b>: importes ya confirmados. El resto son estimaciones. Las inscripciones realizadas se actualizan solas con la lista de inscritos y no se suman al total, porque ya están dentro de las estimadas.</p>
         <p class="compromiso">Publicaremos el resultado final y la memoria de la actividad, y entregaremos la recaudación a la Asociación de Diabetes Valladolid.</p>
       </details>
     </section>
@@ -1374,6 +1380,8 @@ function pintar(){
   if(cerrado()) lista.appendChild(el("p","gestion","Inscripciones y cambios cerrados desde las 00:00 del día del evento."));
   else lista.appendChild(gestionBtn());
   aplicarCierre();
+  $("cu-n").textContent = inscritos.length;
+  $("cu-imp").textContent = (inscritos.length*10).toLocaleString("es-ES");
   const ne = $("n-espera"); ne.hidden = !espera.length; ne.textContent = "· "+espera.length+" en lista de espera";
   const full = lleno();
   $("aviso-espera").hidden = !full;
