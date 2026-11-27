@@ -949,6 +949,14 @@ footer{margin-top:60px;padding:40px 22px;background:#082646}
 .priv-txt{padding:0 16px 14px;display:grid;gap:8px;font-size:.82rem;line-height:1.55;color:rgba(255,255,255,.75)}
 .priv-txt b{color:#fff}
 .priv-txt a{color:#ffd7bf}
+
+/* Aviso de plazo / cierre */
+.aviso-cierre{display:flex;gap:12px;align-items:flex-start;margin:0 0 16px;padding:12px 14px;border-radius:12px;background:#eef6fc;border:1px solid #cfe2f3;color:var(--texto);font-size:.88rem;line-height:1.45}
+.aviso-cierre svg{flex:none;color:var(--azul);margin-top:1px}
+.aviso-cierre b{color:var(--marino)}
+.aviso-cierre.fin{background:#fdeceb;border-color:#f3c7c3}
+.aviso-cierre.fin svg{color:var(--error)}
+.aviso-cierre.fin b{color:var(--error)}
 </style>
 </head>
 <body>
@@ -1076,6 +1084,10 @@ footer{margin-top:60px;padding:40px 22px;background:#082646}
           <li><b>Elige cómo participar:</b> busca equipo, únete a uno o crea el tuyo.</li>
           <li><b>Pulsa «Enviar inscripción»</b> y saldrás en la lista de inscritos.</li>
         </ol>
+        <div class="aviso-cierre" id="aviso-cierre">
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+          <span id="aviso-cierre-txt"><b>Plazo:</b> hasta el sábado 19 de diciembre a las 23:59 h. Desde las 00:00 del día del evento ya no se podrán hacer inscripciones, cambios de equipo ni bajas.</span>
+        </div>
         <div class="aviso-espera" id="aviso-espera" hidden>
           <b>Las 100 plazas están cubiertas.</b>
           <span>Puedes apuntarte a la <b>lista de espera</b>: si alguien se da de baja, la primera persona de la lista pasa a tener plaza y la organización le avisa.</span>
@@ -1250,6 +1262,7 @@ footer{margin-top:60px;padding:40px 22px;background:#082646}
 const CONFIG = {
   ENDPOINT: "https://script.google.com/macros/s/AKfycbzZSKsshk_GfHiCwtoQKxx3iscwrGGTgFQmVcQi7NsABAPBQZ-QWJiwZtAgbnQrkI_5gA/exec",
   FECHA_EVENTO: "2026-12-20T10:00:00+01:00",
+  CIERRE: "2026-12-20T00:00:00+01:00",   // a partir de aquí no se admiten inscripciones, cambios ni bajas
   MAX_EQUIPO: 10,
   MIN_EQUIPO: 6,
   PLAZAS: 100
@@ -1311,7 +1324,7 @@ function pintar(){
     const ul = el("ul"); e.miembros.forEach(x=>ul.appendChild(el("li",null,x)));
     c.append(h,ul);
     const pie = el("div","eq-pie");
-    if(n<CONFIG.MAX_EQUIPO){
+    if(n<CONFIG.MAX_EQUIPO && !cerrado()){
       const u = el("button","unir","Unirme"); u.type = "button"; u.title = "Entrar en el equipo "+(e.nombre||e.id)+" ("+(CONFIG.MAX_EQUIPO-n)+" plazas libres)";
       u.addEventListener("click",()=>{
         const solos = inscritos.filter(p=>!p.equipo);
@@ -1342,7 +1355,7 @@ function pintar(){
       const td3 = el("td","acc"), b = el("button","btn soy","Soy yo"); b.type = "button";
       b.setAttribute("aria-label","Soy "+n+": unirme a un equipo"); b.title = "Soy "+n+": elegir un equipo o crear el mío";
       b.addEventListener("click",()=>abrirCambio(solos,null,i));
-      td3.appendChild(b);
+      if(!cerrado()) td3.appendChild(b);
       tr.append(td0,td1,td2,td3); body.appendChild(tr);
     });
     tb.appendChild(body); wrap.appendChild(tb);
@@ -1358,7 +1371,9 @@ function pintar(){
     c.append(h,ol,el("p","bc-nota","Si alguien se da de baja, la primera persona de la lista pasa a tener plaza."));
     lista.appendChild(c);
   }
-  lista.appendChild(gestionBtn());
+  if(cerrado()) lista.appendChild(el("p","gestion","Inscripciones y cambios cerrados desde las 00:00 del día del evento."));
+  else lista.appendChild(gestionBtn());
+  aplicarCierre();
   const ne = $("n-espera"); ne.hidden = !espera.length; ne.textContent = "· "+espera.length+" en lista de espera";
   const full = lleno();
   $("aviso-espera").hidden = !full;
@@ -1425,7 +1440,7 @@ $("c-ir-form").addEventListener("click",()=>{ $("dlg").close(); $("inscripcion")
 $("dlg-x").addEventListener("click",()=>$("dlg").close());
 $("dlg").addEventListener("click",e=>{ if(e.target===$("dlg")) $("dlg").close(); });
 $("f-cambio").addEventListener("submit", async ev=>{
-  ev.preventDefault(); $("c-msg").hidden = true;
+  ev.preventDefault(); if(cerrado()){ $("dlg").close(); aplicarCierre(); return mostrar(MSG_CERRADO,"err"); } $("c-msg").hidden = true;
   const email = $("c-email").value.trim(), eq = equipos();
   if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return cMostrar("Escribe el email con el que te inscribiste.","err");
   let equipo, equipoNombre = "", telefono = "";
@@ -1495,7 +1510,7 @@ function abrirGestion(){
 $("g-x").addEventListener("click",()=>$("dlg2").close());
 $("dlg2").addEventListener("click",e=>{ if(e.target===$("dlg2")) $("dlg2").close(); });
 $("f-gestion").addEventListener("submit", async ev=>{
-  ev.preventDefault(); $("g-msg").hidden = true;
+  ev.preventDefault(); if(cerrado()){ $("dlg2").close(); aplicarCierre(); return mostrar(MSG_CERRADO,"err"); } $("g-msg").hidden = true;
   const email = $("g-email").value.trim(), baja = gModo()==="baja";
   if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return gMostrar("Escribe el email con el que te inscribiste.","err");
   if(baja && !confirm("¿Seguro que quieres darte de baja? Se borrará tu inscripción.")) return;
@@ -1535,10 +1550,28 @@ document.querySelectorAll('a[href="#privacidad"]').forEach(a=>a.addEventListener
   ev.preventDefault(); const d = $("privacidad"); d.open = true; d.scrollIntoView({behavior:"smooth",block:"center"});
 }));
 
+/* ===== Cierre: desde las 00:00 del día del evento no se admiten inscripciones, cambios ni bajas ===== */
+const MSG_CERRADO = "Las inscripciones y los cambios se cerraron a las 00:00 del domingo 20 de diciembre. Si necesitas algo, habla con la organización en la piscina o escribe a Olmedorebeca@hotmail.com.";
+const cerrado = () => Date.now() >= new Date(CONFIG.CIERRE).getTime();
+function aplicarCierre(){
+  const c = cerrado();
+  document.body.classList.toggle("cerrado", c);
+  $("aviso-cierre").classList.toggle("fin", c);
+  $("aviso-cierre-txt").innerHTML = c
+    ? "<b>Inscripciones cerradas.</b> Desde las 00:00 del domingo 20 de diciembre ya no se admiten inscripciones, cambios de equipo ni bajas. ¡Nos vemos en la piscina a las 10:00!"
+    : "<b>Plazo:</b> hasta el sábado 19 de diciembre a las 23:59 h. Desde las 00:00 del día del evento ya no se podrán hacer inscripciones, cambios de equipo ni bajas.";
+  $("form").hidden = c;
+  if(c) $("aviso-espera").hidden = true;
+  document.querySelectorAll(".pasos,.guia,.bc-nota").forEach(x=>x.hidden = c);
+  const top = $("cta-top"); if(top) top.style.display = c ? "none" : "";
+  document.querySelectorAll('.hero2 .h-acciones .btn').forEach(a=>{ a.textContent = c ? "Ver inscritos" : "Inscribirme"; });
+  if(c){ ["dlg","dlg2"].forEach(id=>{ const d=$(id); if(d && d.open) d.close(); }); }
+}
+
 function mostrar(t,tipo){ const m=$("msg"); m.textContent=t; m.className="msg "+tipo; m.hidden=false; }
 
 $("form").addEventListener("submit", async ev=>{
-  ev.preventDefault(); $("msg").hidden = true;
+  ev.preventDefault(); if(cerrado()){ aplicarCierre(); return mostrar(MSG_CERRADO,"err"); } $("msg").hidden = true;
   const nombre=$("nombre").value.trim(), apellidos=$("apellidos").value.trim(), email=$("email").value.trim();
   if(!nombre||!apellidos) return mostrar("Escribe tu nombre y tus apellidos.","err");
   if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return mostrar("Revisa el email: lo necesitamos para confirmarte la plaza.","err");
@@ -1593,7 +1626,8 @@ function cuenta(){
   set("c-m", p(Math.floor(ms%36e5/6e4)));
   set("c-s", p(Math.floor(ms%6e4/1e3)));
 }
-cuenta(); setInterval(cuenta,1000);
+let yaCerrado = cerrado();
+cuenta(); setInterval(()=>{ cuenta(); if(!yaCerrado && cerrado()){ yaCerrado = true; pintar(); } },1000);
 cargar();
 
 /* ===== Movimiento: aparición al scroll, cabecera, progreso y parallax ===== */

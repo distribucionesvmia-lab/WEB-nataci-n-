@@ -5,6 +5,8 @@
 const MAX_PARTICIPANTES = 100;
 const MAX_EQUIPO = 10;
 const ESPERA = 'Lista de espera';
+// Desde las 00:00 del día del evento (hora de España) no se admiten inscripciones, cambios ni bajas.
+const CIERRE = new Date('2026-12-20T00:00:00+01:00');
 
 // ¿Esta fila está en lista de espera?
 function esEspera_(f) {
@@ -139,6 +141,9 @@ function doPost(e) {
   lock.waitLock(10000);
   try {
     const d = JSON.parse(e.postData.contents);
+    if (new Date() >= CIERRE) {
+      return json_({ ok: false, error: 'Las inscripciones y los cambios se cerraron a las 00:00 del domingo 20 de diciembre.' });
+    }
     if (d.accion === 'cambiarEquipo') return json_(cambiarEquipo_(d));
     if (d.accion === 'salirEquipo') return json_(salirEquipo_(d));
     if (d.accion === 'baja') return json_(baja_(d));
