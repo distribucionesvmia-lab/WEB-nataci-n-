@@ -50,14 +50,10 @@ p{margin:0}
 /* Portada */
 .hero{background:linear-gradient(160deg,#2386dc 0%,var(--azul) 45%,var(--marino) 100%);color:#fff;border:0;display:grid;grid-template-columns:1fr 240px;gap:22px;align-items:center;position:relative;overflow:hidden}
 .hero::after{content:"";position:absolute;inset:auto -40px -60px -40px;height:120px;background:radial-gradient(60% 100% at 50% 100%,rgba(255,255,255,.14),transparent 70%);pointer-events:none}
-.etiqueta{display:inline-block;background:rgba(255,255,255,.16);border-radius:99px;padding:3px 12px;font-weight:800;font-size:.78rem;letter-spacing:.06em;text-transform:uppercase}
+
 .hero h1{font-size:clamp(2.3rem,9vw,3.6rem);margin:10px 0 2px}
 .hero .lema{font-weight:800;font-size:1.1rem;color:#ffd7bf}
-.claves{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:16px 0}
-.claves div{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.22);border-radius:12px;padding:8px 11px;line-height:1.25}
-.claves small{display:block;font-size:.7rem;letter-spacing:.08em;text-transform:uppercase;opacity:.8}
-.claves b{font-size:.98rem}
-.acciones{display:flex;gap:10px;align-items:center;justify-content:center;flex-wrap:wrap;margin-top:6px}
+
 .cuenta{justify-content:center}
 .btn{display:inline-flex;justify-content:center;align-items:center;background:var(--llama);color:#fff;font:800 1.05rem var(--body);border:0;border-radius:99px;padding:13px 26px;text-decoration:none;cursor:pointer;min-height:48px}
 .btn:hover{background:#d35512}
@@ -181,7 +177,7 @@ footer a{color:var(--azul);font-weight:700}
   .logo{padding:8px}
   .logo img{height:60px}
   .logo span{font-size:.6rem}
-  .acciones .btn{width:100%}
+  
 }
 
 /* ===== Estilo deportivo / piscina ===== */
@@ -223,14 +219,12 @@ footer a{color:var(--azul);font-weight:700}
 .fotos figure{margin:0;position:relative;border-radius:14px;overflow:hidden;aspect-ratio:4/3}
 .fotos img{width:100%;height:100%;object-fit:cover}
 .fotos figcaption{position:absolute;left:8px;bottom:8px;background:rgba(12,53,99,.85);color:#fff;font-size:.75rem;font-weight:800;padding:3px 10px;border-radius:99px}
-.donde-txt{margin-top:12px;font-size:.95rem}
-.donde-txt a{color:var(--azul);font-weight:800;white-space:nowrap}
+
 @media (max-width:420px){.fotos{grid-template-columns:1fr 1fr}.fotos figure{aspect-ratio:1}}
 
 /* Portada con castillo */
 .hero{padding-top:230px}
-.lugar-hero{position:absolute;top:16px;left:22px;right:22px;margin:0;font:800 clamp(1.6rem,7.5vw,2.6rem)/1 var(--display);font-style:italic;text-transform:uppercase;letter-spacing:.5px;color:#fff;text-shadow:0 2px 12px rgba(0,0,0,.45)}
-.lugar-hero::after{content:"Castillo de la Mota";display:block;font:700 .72rem var(--body);letter-spacing:.12em;margin-top:6px;opacity:.9;font-style:normal}
+
 .hero .cartel{align-self:end}
 /* Fotos de la piscina */
 .fotos{grid-template-columns:1fr 1fr;gap:12px}
@@ -245,7 +239,7 @@ footer a{color:var(--azul);font-weight:700}
 .cuenta div{background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.28);border-radius:10px;padding:5px 9px;min-width:54px;text-align:center;line-height:1}
 .cuenta b{display:block;font:800 1.45rem/1 var(--display);font-style:italic;font-variant-numeric:tabular-nums}
 .cuenta small{display:block;font-size:.6rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;opacity:.85;margin-top:3px}
-@media (max-width:420px){.acciones{flex-direction:column;align-items:center}.cuenta{justify-content:center}}
+@media (max-width:420px){.cuenta{justify-content:center}}
 
 /* ===== Movimiento premium ===== */
 :root{--ease:cubic-bezier(.22,1,.36,1);--ease-in-out:cubic-bezier(.65,0,.35,1);interpolate-size:allow-keywords}
@@ -286,9 +280,7 @@ footer a{color:var(--azul);font-weight:700}
 .js .hero>div>:nth-child(4){animation-delay:.42s}
 .js .hero>div>:nth-child(5){animation-delay:.5s}
 .js .hero>div>:nth-child(6){animation-delay:.62s}
-.js .claves div{animation:sube .8s var(--ease) both}
-.js .claves div:nth-child(1){animation-delay:.55s}.js .claves div:nth-child(2){animation-delay:.62s}
-.js .claves div:nth-child(3){animation-delay:.69s}.js .claves div:nth-child(4){animation-delay:.76s}
+
 .js .hero .cartel{animation:cartelIn 1.2s var(--ease) .35s both}
 .hero .cartel{will-change:translate}
 /* Brillo del agua */
@@ -356,24 +348,6 @@ body::before{content:"";position:fixed;inset:-20%;z-index:-1;pointer-events:none
 .hero{margin-inline:calc(50% - 50vw);border-radius:0;padding-inline:22px;padding-bottom:96px;isolation:isolate}
 .hero::before{display:none}
 .hero>div>*:not(.lugar-hero),.hero .cartel{position:relative;z-index:2}
-.lugar-hero{z-index:2}
-.agua{position:absolute;inset:0;z-index:1;pointer-events:none;overflow:hidden}
-.causticas,.causticas::after{position:absolute;inset:-30%;mix-blend-mode:soft-light;opacity:.28;
-  background:radial-gradient(5% 2.5% at 20% 30%,#fff,transparent),radial-gradient(6% 3% at 60% 20%,#fff,transparent),radial-gradient(4% 2.5% at 80% 60%,#fff,transparent),radial-gradient(5% 3% at 35% 70%,#fff,transparent),radial-gradient(4% 2% at 50% 45%,#fff,transparent);
-  animation:causticas 16s var(--ease-in-out) infinite alternate}
-.causticas::after{content:"";inset:0;animation-duration:21s;animation-direction:alternate-reverse}
-@keyframes causticas{from{transform:translate3d(-4%,-2%,0) rotate(0) scale(1)}to{transform:translate3d(4%,3%,0) rotate(8deg) scale(1.15)}}
-.burbuja{position:absolute;bottom:-30px;left:var(--x);width:var(--s);height:var(--s);border-radius:50%;
-  background:radial-gradient(circle at 32% 30%,rgba(255,255,255,.85),rgba(255,255,255,.12) 45%,rgba(255,255,255,.04) 70%);border:1px solid rgba(255,255,255,.35);
-  animation:burbuja var(--t) linear var(--d) infinite;opacity:0}
-@keyframes burbuja{0%{transform:translate(0,0);opacity:0}10%{opacity:.85}50%{transform:translate(14px,-45vh)}90%{opacity:.6}100%{transform:translate(-6px,-95vh);opacity:0}}
-
-.olas{position:absolute;left:0;right:0;bottom:-1px;height:90px;z-index:3;pointer-events:none;overflow:hidden}
-.olas svg{position:absolute;left:0;bottom:0;width:200%;height:100%;animation:olaX 16s linear infinite}
-.olas .o1{fill:var(--fondo);height:62%}
-.olas .o2{fill:rgba(238,246,252,.45);height:85%;animation-duration:22s;animation-direction:reverse}
-.olas .o3{fill:rgba(255,255,255,.18);animation-duration:30s}
-@keyframes olaX{to{transform:translateX(-50%)}}
 
 /* Estela que recorre cada calle */
 .calle::after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(90deg,transparent,rgba(255,255,255,.75),transparent) no-repeat;background-size:40% 100%;background-position:-60% 0}
@@ -381,8 +355,6 @@ body::before{content:"";position:fixed;inset:-20%;z-index:-1;pointer-events:none
 @keyframes estela{from{background-position:-60% 0}to{background-position:180% 0}}
 
 /* Onda al pulsar botones */
-.onda{position:absolute;border-radius:50%;background:rgba(255,255,255,.45);transform:scale(0);animation:onda .7s var(--ease) forwards;pointer-events:none;z-index:-1}
-@keyframes onda{to{transform:scale(1);opacity:0}}
 
 .js .rv{filter:blur(6px);transition:opacity .9s var(--ease),transform 1s var(--ease),filter .9s var(--ease),box-shadow .4s var(--ease)}
 .js .rv.in{filter:none}
@@ -393,9 +365,7 @@ body::before{content:"";position:fixed;inset:-20%;z-index:-1;pointer-events:none
 
 /* Pie */
 footer{position:relative;margin:120px calc(50% - 50vw) 0;padding:40px 22px 46px;background:linear-gradient(180deg,var(--marino),#082646);color:rgba(255,255,255,.8)}
-footer .olas-pie{top:-89px;bottom:auto}
-footer .olas-pie .o1{fill:var(--marino)}
-footer .olas-pie .o2{fill:rgba(12,53,99,.35)}
+
 .pie{max-width:1180px;margin:0 auto;display:grid;gap:6px;text-align:center}
 .pie-marca{font:800 1.4rem var(--display);font-style:italic;text-transform:uppercase;color:#fff}
 footer a{color:#ffd7bf}
@@ -417,18 +387,18 @@ footer a{color:#ffd7bf}
       linear-gradient(90deg,var(--marino) 0%,rgba(12,53,99,.93) 38%,rgba(12,53,99,.62) 68%,rgba(12,53,99,.45) 100%),
       linear-gradient(0deg,rgba(8,38,70,.9) 0%,transparent 45%),
       url("img/castillo.jpg") right 30% / cover no-repeat,var(--marino)}
-  .lugar-hero{position:relative;inset:auto;font-size:1.5rem;margin-bottom:22px}
+  
   .hero h1{font-size:clamp(3.4rem,5.6vw,5.4rem);margin:14px 0 6px;letter-spacing:-1px}
   .hero .lema{font-size:1.35rem}
-  .claves{max-width:600px;gap:12px;margin:26px 0}
-  .claves div{padding:12px 16px;-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
-  .claves b{font-size:1.1rem}
-  .acciones{justify-content:flex-start;gap:18px}
+  
+  
+  
+  
   .hero .btn{font-size:1.15rem;padding:16px 34px}
   .cuenta div{min-width:66px;padding:8px 10px}
   .cuenta b{font-size:1.8rem}
   .hero .cartel{display:block;width:min(360px,100%);justify-self:center;align-self:center;border-width:6px;box-shadow:0 30px 60px rgba(0,0,0,.35),0 0 0 1px rgba(255,255,255,.2)}
-  .olas{height:120px}
+  
 
   .logos{gap:20px}
   .logos{gap:16px}
@@ -446,7 +416,7 @@ footer a{color:#ffd7bf}
 
   .fotos{gap:20px}
   .fotos figure{aspect-ratio:16/10}
-  .donde-txt{font-size:1.05rem;margin-top:18px}
+  
 
   .insc{grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr);gap:56px}
   #equipos{position:sticky;top:96px}
@@ -454,13 +424,13 @@ footer a{color:#ffd7bf}
   form{gap:16px}
 
   footer{margin-top:160px;padding:56px 40px 64px}
-  footer .olas-pie{top:-119px}
+  
 }
 @media (min-width:900px) and (hover:hover){
   .fotos figure{transition:transform .6s var(--ease),box-shadow .6s var(--ease)}
   .fotos figure:hover{transform:translateY(-4px);box-shadow:0 18px 40px rgba(12,53,99,.22)}
 }
-@media (prefers-reduced-motion:reduce){.burbujas{display:none}.js .rv{filter:none}}
+@media (prefers-reduced-motion:reduce){.js .rv{filter:none}}
 
 /* ===== Acabado profesional ===== */
 :root{--sombra:0 1px 2px rgba(12,53,99,.04),0 8px 28px rgba(12,53,99,.06);--borde:rgba(12,53,99,.08)}
@@ -474,16 +444,13 @@ h1,h2,h3{letter-spacing:0}
 .top small{font-weight:500;font-size:.72rem;letter-spacing:.02em}
 
 /* Portada */
-.etiqueta{font-size:.7rem;letter-spacing:.14em;padding:5px 12px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.22);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
+
 .hero h1{font-weight:800;letter-spacing:.005em;line-height:.92;text-shadow:0 2px 24px rgba(0,0,0,.25)}
 .hero .lema{font-weight:600;letter-spacing:.01em}
-.claves small{font-weight:600;font-size:.66rem;letter-spacing:.12em;opacity:.7}
-.claves b{font-weight:600}
+
 .cuenta b{font-weight:800}
 .cuenta small{font-weight:600;letter-spacing:.1em}
 .btn{font-weight:700;letter-spacing:.01em}
-.lugar-hero{font-weight:800;letter-spacing:.04em}
-.lugar-hero::after{font-weight:600;letter-spacing:.18em}
 
 /* Títulos de sección: línea fina en vez de franjas */
 .titulo.deporte{font-size:1.7rem;font-weight:800;font-style:italic;letter-spacing:.01em;gap:12px}
@@ -545,8 +512,8 @@ td{padding:8px}
 @media (min-width:900px){
   .titulo.deporte{font-size:2.1rem}
   .hero h1{font-size:clamp(4rem,6.6vw,6.4rem)}
-  .lugar-hero{font-size:1.05rem;letter-spacing:.22em;opacity:.95;margin-bottom:14px}
-  .lugar-hero::after{display:inline;margin-left:12px;padding-left:12px;border-left:1px solid rgba(255,255,255,.4);opacity:.75}
+  
+  
   .consiste{grid-template-rows:auto 1fr;align-items:start}
   .consiste .causa{align-self:start;font-size:1.1rem;line-height:1.65}
   .card:not(.hero){padding:40px}
@@ -574,7 +541,7 @@ dialog#dlg2::backdrop{background:rgba(8,38,70,.45);-webkit-backdrop-filter:blur(
 .persona{display:flex;align-items:center;gap:9px;padding:7px 12px 7px 7px;background:#fff;border:1px solid #f1e1d4;border-radius:99px;animation:pop .5s var(--ease) both;transition:border-color .3s,transform .3s var(--ease),box-shadow .3s}
 .persona:nth-child(2){animation-delay:.04s}.persona:nth-child(3){animation-delay:.08s}.persona:nth-child(4){animation-delay:.12s}.persona:nth-child(n+5){animation-delay:.16s}
 @media (hover:hover){.persona:hover{border-color:var(--llama);transform:translateY(-1px);box-shadow:0 6px 14px rgba(236,98,25,.12)}}
-.avatar{flex:none;width:30px;height:30px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(135deg,#ffb27d,var(--llama));color:#fff;font:800 .95rem var(--display)}
+
 .pn{font-weight:600;font-size:.86rem;color:var(--marino);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .buscan-card .btn{width:100%;min-height:46px;font-size:.95rem}
 .bc-nota{margin-top:10px;font-size:.78rem;color:var(--suave);text-align:center}
@@ -666,7 +633,7 @@ body::before{display:none}
 h1,h2,h3{font-style:normal}
 
 /* Sin adornos de juego */
-.agua,.olas,.burbujas,.causticas,.onda,.hero::before,.hero::after,.calle::after,.fotos figure::after,.barra .meta{display:none!important}
+.hero::before,.hero::after,.calle::after,.fotos figure::after,.barra .meta{display:none!important}
 .btn::after,.hero .btn::before{display:none}
 .hero .btn,.btn{animation:none!important;box-shadow:none!important}
 
@@ -687,13 +654,10 @@ h1,h2,h3{font-style:normal}
 /* Portada */
 .hero{border-radius:0;border-bottom:4px solid var(--llama);padding-bottom:44px;
   background:linear-gradient(180deg,rgba(8,38,70,.55) 0%,rgba(8,38,70,.86) 55%,#082646 100%),url("img/castillo.jpg") center top/cover no-repeat,#082646}
-.etiqueta{background:transparent;border:1px solid rgba(255,255,255,.4);border-radius:4px;letter-spacing:.18em;font-weight:600;font-size:.68rem;padding:5px 12px;-webkit-backdrop-filter:none;backdrop-filter:none}
+
 .hero h1{font-style:normal;text-transform:uppercase;font-weight:700;letter-spacing:.02em;line-height:.95;text-shadow:none}
 .hero .lema{font-weight:500;color:#f3d9c6;letter-spacing:.02em}
-.lugar-hero{font-style:normal;font-weight:600;letter-spacing:.2em;text-shadow:none;font-size:.95rem}
-.lugar-hero::after{letter-spacing:.2em;font-weight:500}
-.claves div{border-radius:6px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.2);-webkit-backdrop-filter:none;backdrop-filter:none}
-.claves small{opacity:.65}
+
 .btn{border-radius:8px;font-weight:600;letter-spacing:.01em}
 .hero .btn{background:var(--llama)}
 .cuenta div{border-radius:6px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.22)}
@@ -758,7 +722,7 @@ input:focus,select:focus{box-shadow:none;outline:2px solid rgba(26,111,192,.3);o
 .tabla-busca tbody tr{animation:none}
 .tabla-busca tbody tr:nth-child(even){background:#f8fafc}
 @media (hover:hover){.tabla-busca tbody tr:hover{background:#eef4fb}}
-.tabla-busca .avatar,.avatar{border-radius:6px;background:#e3eaf2;color:var(--marino);width:28px;height:28px;font-size:.85rem;font-weight:700}
+
 .tabla-busca .tag{border-radius:4px;background:#fff3ea;color:#a6460f}
 .tabla-busca .btn.soy,.buscan-card .btn{border-radius:6px}
 .persona{border-radius:6px;animation:none}
@@ -783,16 +747,15 @@ footer{margin-top:60px;padding:40px 22px;background:#082646}
 .js .rv{filter:none;transform:translateY(12px);transition:opacity .6s var(--ease),transform .7s var(--ease)}
 .js .rv .st{transform:translateY(8px);transition:opacity .5s var(--ease),transform .6s var(--ease)}
 .js .rv .fotos img{transform:none}
-.js .hero,.js .hero>div>*,.js .claves div{animation-duration:.6s}
+.js .hero,.js .hero>div>*{animation-duration:.6s}
 .cuenta b.tick{animation:none}
 
 /* Ajustes móvil del estilo sobrio */
-.lugar-hero{position:static;display:block;margin:0 0 14px;font-size:.85rem}
-.lugar-hero::after{display:inline;margin-left:10px;padding-left:10px;border-left:1px solid rgba(255,255,255,.4);margin-top:0;font-size:.7rem}
+
 .hero{padding-top:40px}
 .logo span{font-size:.58rem;letter-spacing:.1em;white-space:nowrap}
 .logo{padding:12px 6px 10px}
-@media (min-width:900px){.hero{padding-top:96px}.lugar-hero{font-size:.95rem}.logo span{font-size:.62rem;letter-spacing:.14em}}
+@media (min-width:900px){.hero{padding-top:96px}.logo span{font-size:.62rem;letter-spacing:.14em}}
 
 /* ===== Inscripción: estilo deportivo (como antes) ===== */
 #inscripcion{border-radius:22px;box-shadow:0 1px 2px rgba(12,53,99,.05),0 14px 36px rgba(12,53,99,.09);padding:30px}
@@ -850,18 +813,12 @@ footer{margin-top:60px;padding:40px 22px;background:#082646}
 }
 
 /* ===== Portada: que se vea bien el castillo ===== */
-.lugar-hero{position:static;display:block;margin:0 0 18px;text-shadow:none;letter-spacing:0;font:inherit;text-transform:none}
-.lugar-hero::after{display:none!important;content:none}
-.lh-ciudad{display:block;font:800 clamp(2.1rem,9.5vw,3rem)/.95 var(--display);text-transform:uppercase;letter-spacing:.04em;color:#fff;text-shadow:0 2px 18px rgba(0,0,0,.55)}
-.lh-mota{display:inline-flex;align-items:center;gap:10px;margin-top:10px;font:600 .8rem var(--body);letter-spacing:.2em;text-transform:uppercase;color:#fff;text-shadow:0 1px 8px rgba(0,0,0,.6)}
-.lh-mota::before{content:"";width:34px;height:3px;background:var(--llama);border-radius:2px}
 
 /* Móvil: foto del castillo bien visible arriba, con fundido hacia el azul */
 .hero{padding-top:300px;background:
   linear-gradient(180deg,rgba(8,38,70,.38) 0,rgba(8,38,70,0) 22%,rgba(8,38,70,0) 46%,rgba(8,38,70,.72) 66%,#082646 82%),
   url("img/castillo.jpg") center top/100% auto no-repeat,#082646}
-.lugar-hero{position:absolute;left:22px;right:22px;top:26px;margin:0}
-.hero>div>.lugar-hero{position:absolute}
+
 .hero>div{position:static}
 .hero>div>*:not(.lugar-hero){position:relative}
 @media (min-width:900px){
@@ -871,9 +828,9 @@ footer{margin-top:60px;padding:40px 22px;background:#082646}
       linear-gradient(0deg,rgba(8,38,70,.7) 0%,transparent 30%),
       url("img/castillo.jpg") right 20%/cover no-repeat,#082646}
   .hero>div{position:relative}
-  .hero>div>.lugar-hero{position:static;margin:0 0 26px}
-  .lh-ciudad{font-size:clamp(2.6rem,4.4vw,4rem)}
-  .lh-mota{font-size:.95rem}
+  
+  
+  
   .hero h1{font-size:clamp(3.2rem,5.2vw,5rem)}
 }
 
@@ -978,7 +935,7 @@ footer{margin-top:60px;padding:40px 22px;background:#082646}
 <div class="wrap">
 
   <div class="top">
-    <img src="img/triatlon.png" alt="Club Triatlón Bomberos Valladolid">
+    <img src="img/triatlon.jpg" alt="Club Triatlón Bomberos Valladolid">
     <div><b>Cien por Cien Solidarios</b><small>Club Triatlón Bomberos Valladolid</small></div>
     <a class="btn mini" id="cta-top" href="#inscripcion" tabindex="-1" aria-hidden="true">Inscribirme</a>
   </div>
@@ -1027,9 +984,9 @@ footer{margin-top:60px;padding:40px 22px;background:#082646}
     <section class="card apoyos" aria-labelledby="ap">
       <h2 id="ap">Con el apoyo de</h2>
       <div class="logos">
-        <div class="logo"><img src="img/redexis.png" alt="Fundación Redexis"><span>Patrocinador</span></div>
-        <div class="logo"><img src="img/valentin.png" alt="Distribuciones Valentín, Medina del Campo"><span>Colaborador</span></div>
-        <div class="logo"><img src="img/triatlon.png" alt="Club Triatlón Bomberos Valladolid"><span>Organiza</span></div>
+        <div class="logo"><img src="img/redexis.jpg" alt="Fundación Redexis" loading="lazy" decoding="async"><span>Patrocinador</span></div>
+        <div class="logo"><img src="img/valentin.jpg" alt="Distribuciones Valentín, Medina del Campo" loading="lazy" decoding="async"><span>Colaborador</span></div>
+        <div class="logo"><img src="img/triatlon.jpg" alt="Club Triatlón Bomberos Valladolid"><span>Organiza</span></div>
         <div class="logo"><img src="img/garaje-maito.jpg" alt="Garaje Maito, venta y reparación de bicicletas, Medina del Campo" loading="lazy"><span>Colaborador</span></div>
         <div class="logo"><img src="img/churreria-versalles.jpg" alt="Churrería Los Jardines de Versalles" loading="lazy"><span>Colaborador</span></div>
         <div class="logo"><img src="img/bar-cazadores.jpg" alt="Cafe-Bar Los Cazadores" loading="lazy"><span>Colaborador</span></div>
