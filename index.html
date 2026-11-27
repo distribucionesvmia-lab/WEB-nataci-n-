@@ -848,6 +848,44 @@ footer{margin-top:60px;padding:40px 22px;background:#082646}
   .vd-txt p{margin:0 0 22px}
   .vd-marco{width:340px;justify-self:end}
 }
+
+/* ===== Portada: que se vea bien el castillo ===== */
+.lugar-hero{position:static;display:block;margin:0 0 18px;text-shadow:none;letter-spacing:0;font:inherit;text-transform:none}
+.lugar-hero::after{display:none!important;content:none}
+.lh-ciudad{display:block;font:800 clamp(2.1rem,9.5vw,3rem)/.95 var(--display);text-transform:uppercase;letter-spacing:.04em;color:#fff;text-shadow:0 2px 18px rgba(0,0,0,.55)}
+.lh-mota{display:inline-flex;align-items:center;gap:10px;margin-top:10px;font:600 .8rem var(--body);letter-spacing:.2em;text-transform:uppercase;color:#fff;text-shadow:0 1px 8px rgba(0,0,0,.6)}
+.lh-mota::before{content:"";width:34px;height:3px;background:var(--llama);border-radius:2px}
+
+/* Móvil: foto del castillo bien visible arriba, con fundido hacia el azul */
+.hero{padding-top:300px;background:
+  linear-gradient(180deg,rgba(8,38,70,.38) 0,rgba(8,38,70,0) 22%,rgba(8,38,70,0) 46%,rgba(8,38,70,.72) 66%,#082646 82%),
+  url("img/castillo.jpg") center top/100% auto no-repeat,#082646}
+.lugar-hero{position:absolute;left:22px;right:22px;top:26px;margin:0}
+.hero>div>.lugar-hero{position:absolute}
+.hero>div{position:static}
+.hero>div>*:not(.lugar-hero){position:relative}
+@media (min-width:900px){
+  .hero{padding-top:96px;
+    background:
+      linear-gradient(90deg,#082646 0%,rgba(8,38,70,.94) 30%,rgba(8,38,70,.45) 58%,rgba(8,38,70,.12) 100%),
+      linear-gradient(0deg,rgba(8,38,70,.7) 0%,transparent 30%),
+      url("img/castillo.jpg") right 20%/cover no-repeat,#082646}
+  .hero>div{position:relative}
+  .hero>div>.lugar-hero{position:static;margin:0 0 26px}
+  .lh-ciudad{font-size:clamp(2.6rem,4.4vw,4rem)}
+  .lh-mota{font-size:.95rem}
+  .hero h1{font-size:clamp(3.2rem,5.2vw,5rem)}
+}
+
+/* Desktop: castillo nítido en marco + cartel superpuesto */
+.visual{display:none}
+@media (min-width:900px){
+  .hero{background:radial-gradient(120% 90% at 85% 40%,#12437a 0%,#0a2e55 45%,#082646 100%)}
+  .visual{display:block;position:relative;width:100%;max-width:560px;height:620px;justify-self:end}
+  .visual .castillo{position:absolute;right:0;top:0;width:100%;max-width:520px;aspect-ratio:521/383;height:auto;object-fit:cover;border-radius:6px;border:1px solid rgba(255,255,255,.35);box-shadow:0 24px 60px rgba(0,0,0,.45)}
+  .visual .cartel{position:absolute!important;display:block!important;left:0;bottom:0;width:250px;height:auto;border-radius:6px;border:1px solid rgba(255,255,255,.7);box-shadow:0 24px 60px rgba(0,0,0,.5)}
+  .hero .cartel{translate:none!important}
+}
 </style>
 </head>
 <body>
@@ -865,7 +903,7 @@ footer{margin-top:60px;padding:40px 22px;background:#082646}
     <!-- Portada -->
     <section class="card hero" aria-labelledby="t">
       <div>
-        <p class="lugar-hero">Medina del Campo</p>
+        <p class="lugar-hero"><span class="lh-ciudad">Medina del Campo</span><span class="lh-mota">Castillo de la Mota</span></p>
         <span class="etiqueta">Natación solidaria</span>
         <h1 id="t">Cien por cien solidarios</h1>
         <p class="lema">Acción temprana contra la diabetes</p>
@@ -885,7 +923,10 @@ footer{margin-top:60px;padding:40px 22px;background:#082646}
           </div>
         </div>
       </div>
-      <img class="cartel" src="img/cartel.jpg" alt="Cartel del evento: niño nadando con sensor de glucosa en el brazo">
+      <div class="visual">
+        <img class="castillo" src="img/castillo.jpg" alt="Castillo de la Mota, en Medina del Campo">
+        <img class="cartel" src="img/cartel.jpg" alt="Cartel del evento: niño nadando con sensor de glucosa en el brazo">
+      </div>
     </section>
 
     <!-- Apoyos -->
