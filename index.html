@@ -954,6 +954,23 @@ footer{margin-top:60px;padding:40px 22px;background:#082646}
   .hero2 .v-castillo figcaption b{font-size:1.5rem}
   .hero2 .v-castillo figcaption span{font-size:.6rem;letter-spacing:.16em}
 }
+
+/* Temporizador grande */
+.hero2 .h-cuenta{display:block;margin-top:24px;padding:16px 14px 14px;border-radius:12px;background:linear-gradient(180deg,rgba(255,255,255,.09),rgba(255,255,255,.03));border:1px solid rgba(255,255,255,.18);border-top:3px solid var(--llama);box-shadow:0 14px 34px rgba(0,0,0,.22)}
+.hero2 .h-faltan{display:block;text-align:center;font:600 .72rem var(--body);letter-spacing:.2em;color:#ffb27d;margin-bottom:10px}
+.hero2 .cuenta{display:grid;grid-template-columns:repeat(4,1fr);gap:0;justify-content:stretch}
+.hero2 .cuenta div{position:relative;min-width:0;padding:0 4px;background:none;border:0;border-radius:0;text-align:center}
+.hero2 .cuenta div+div::before{content:":";position:absolute;left:-.12em;top:-.02em;font:700 2.6rem/1 var(--display);color:rgba(255,255,255,.35)}
+.hero2 .cuenta b{display:block;font:700 3rem/1 var(--display);letter-spacing:.02em;font-variant-numeric:tabular-nums;color:#fff;overflow:hidden}
+.hero2 .cuenta small{display:block;margin-top:6px;font:600 .62rem var(--body);letter-spacing:.18em;text-transform:uppercase;opacity:.7}
+.hero2 .cuenta b.tick{animation:tick .45s var(--ease)}
+@media (min-width:900px){
+  .hero2 .h-cuenta{display:inline-block;min-width:440px;margin-top:28px;padding:18px 26px 16px}
+  .hero2 .h-faltan{text-align:left}
+  .hero2 .cuenta b{font-size:3.6rem}
+  .hero2 .cuenta div+div::before{font-size:3.1rem}
+}
+@media (prefers-reduced-motion:reduce){.hero2 .cuenta b.tick{animation:none}}
 </style>
 </head>
 <body>
@@ -988,7 +1005,7 @@ footer{margin-top:60px;padding:40px 22px;background:#082646}
           <a class="btn-sec" href="#vd"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M10 8.5v7l6-3.5z" fill="currentColor"/></svg>Ver el vídeo</a>
         </div>
         <div class="h-cuenta">
-          <span class="h-faltan">Faltan</span>
+          <span class="h-faltan">Faltan para la jornada</span>
           <div class="cuenta" id="cuenta" hidden aria-label="Cuenta atrás hasta el evento">
             <div><b id="c-d">0</b><small>días</small></div>
             <div><b id="c-h">00</b><small>horas</small></div>
