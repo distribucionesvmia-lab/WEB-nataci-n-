@@ -1130,7 +1130,7 @@ tr.realizadas small{display:block;font-style:normal;font-size:.72rem;color:#8a97
           </label>
           <label class="check" for="rgpd">
             <input id="rgpd" type="checkbox" required>
-            <span>Acepto que mis datos se usen solo para gestionar esta jornada y que mi nombre de pila aparezca en la lista de inscritos. <a href="#privacidad" class="ver-priv">Ver protección de datos</a></span>
+            <span>Acepto que mis datos se usen solo para gestionar esta jornada y que mi nombre de pila y la inicial de mi primer apellido aparezcan en la lista de inscritos. <a href="#privacidad" class="ver-priv">Ver protección de datos</a></span>
           </label>
           <label class="check" for="img-ok">
             <input id="img-ok" type="checkbox">
@@ -1138,7 +1138,7 @@ tr.realizadas small{display:block;font-style:normal;font-size:.72rem;color:#8a97
           </label>
           <div id="msg" class="msg" role="status" hidden></div>
           <button class="btn" type="submit" id="enviar">Enviar inscripción</button>
-          <p class="nota ayuda-btn">Solo se publica tu nombre de pila. Guarda el email con el que te inscribes: lo necesitarás para unirte a un equipo, salirte o darte de baja.</p>
+          <p class="nota ayuda-btn">Solo se publica tu nombre de pila y la inicial de tu primer apellido. Guarda el email con el que te inscribes: lo necesitarás para unirte a un equipo, salirte o darte de baja.</p>
         </form>
       </div>
 
@@ -1249,7 +1249,7 @@ tr.realizadas small{display:block;font-style:normal;font-size:.72rem;color:#8a97
         <div class="priv-txt">
           <p><b>Quién trata tus datos:</b> la organización de Cien por Cien Solidarios (Club Triatlón Bomberos Valladolid). Contacto: <a href="mailto:Olmedorebeca@hotmail.com">Olmedorebeca@hotmail.com</a>.</p>
           <p><b>Para qué:</b> gestionar tu inscripción y el pago, formar los equipos y avisarte de cualquier cosa sobre la jornada.</p>
-          <p><b>Qué datos:</b> nombre, apellidos, email, club (opcional) y, si creas un equipo, un teléfono de contacto. En la web solo se publica tu nombre de pila y tu equipo.</p>
+          <p><b>Qué datos:</b> nombre, apellidos, email, club (opcional) y, si creas un equipo, un teléfono de contacto. En la web solo se publica tu nombre de pila, la inicial de tu primer apellido y tu equipo.</p>
           <p><b>Con qué base:</b> tu consentimiento al marcar la casilla del formulario. Las fotos y vídeos solo se publican si das tu permiso en la casilla opcional.</p>
           <p><b>Dónde se guardan:</b> en una hoja de cálculo de Google de la organización. No se ceden ni se venden a nadie.</p>
           <p><b>Cuánto tiempo:</b> hasta que termine la jornada y se cierren las cuentas; después se borran.</p>
@@ -1300,9 +1300,16 @@ function equipos(){
     if(!m.has(p.equipo)) m.set(p.equipo,{id:Number(p.equipo),nombre:"",miembros:[]});
     const e = m.get(p.equipo);
     if(!e.nombre && p.equipoNombre) e.nombre = p.equipoNombre;
-    e.miembros.push(String(p.nombre).split(" ")[0]);
+    e.miembros.push(visible(p));
   });
   return [...m.values()].sort((a,b)=>a.id-b.id);
+}
+
+/* Cómo se ve a una persona en la web: nombre de pila + inicial del primer apellido (p. ej. "Ana G.") */
+function visible(p){
+  const n = String(p.nombre||"").trim().split(/\s+/)[0];
+  const i = String(p.inicial || String(p.apellidos||"").trim().charAt(0) || "").charAt(0).toUpperCase();
+  return i ? n+" "+i+"." : n;
 }
 
 function el(tag,cls,txt){ const e=document.createElement(tag); if(cls) e.className=cls; if(txt!=null) e.textContent=txt; return e; }
@@ -1354,7 +1361,7 @@ function pintar(){
     th.appendChild(trh); tb.appendChild(th);
     const body = el("tbody");
     solos.forEach((p,i)=>{
-      const n = String(p.nombre).split(" ")[0], tr = el("tr");
+      const n = visible(p), tr = el("tr");
       const td0 = el("td","num",String(i+1)), td1 = el("td","nom"), in1 = el("div","nom-in");
       in1.append(el("span","pn",n)); td1.appendChild(in1);
       const td2 = el("td","est"); td2.appendChild(el("span","tag","Sin equipo"));
@@ -1373,7 +1380,7 @@ function pintar(){
     const t = el("div","bc-tit"); t.append(el("h3",null,"Lista de espera"), el("small",null,"Por orden de inscripción"));
     h.append(t, el("span","bc-n",String(espera.length)));
     const ol = el("ol","lista-espera");
-    espera.forEach(p=>ol.appendChild(el("li",null,String(p.nombre).split(" ")[0])));
+    espera.forEach(p=>ol.appendChild(el("li",null,visible(p))));
     c.append(h,ol,el("p","bc-nota","Si alguien se da de baja, la primera persona de la lista pasa a tener plaza."));
     lista.appendChild(c);
   }
@@ -1425,7 +1432,7 @@ function cCambio(){
 document.querySelectorAll('input[name=c-modo]').forEach(r=>r.addEventListener("change",cCambio));
 function abrirCambio(solos, equipoId, quien){
   const q = $("c-quien"); q.textContent = "";
-  solos.forEach(p=>{ const o=el("option",null,String(p.nombre).split(" ")[0]); q.appendChild(o); });
+  solos.forEach(p=>{ const o=el("option",null,visible(p)); q.appendChild(o); });
   if(quien!=null) q.selectedIndex = quien;
   const s = $("c-equipo"); s.textContent = "";
   equipos().filter(e=>e.miembros.length<CONFIG.MAX_EQUIPO).forEach(e=>{
@@ -1507,7 +1514,7 @@ function abrirGestion(){
   const eq = equipos(), q = $("g-quien"); q.textContent = "";
   todos.forEach((p,i)=>{
     const e = p.equipo ? eq.find(x=>x.id===Number(p.equipo)) : null;
-    const o = el("option",null,String(p.nombre).split(" ")[0]+" · "+(p.espera?"lista de espera":e?"Equipo "+(e.nombre||e.id):"busca equipo")); o.value = i; q.appendChild(o);
+    const o = el("option",null,visible(p)+" · "+(p.espera?"lista de espera":e?"Equipo "+(e.nombre||e.id):"busca equipo")); o.value = i; q.appendChild(o);
   });
   if(!todos.length) return mostrar("Todavía no hay nadie inscrito.","err");
   document.querySelector('input[name=g-modo][value=salir]').checked = true;
